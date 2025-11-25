@@ -44,7 +44,7 @@ export default function Header() {
             </div>
             <div className="flex flex-col">
               <span className="text-white font-bold text-xl tracking-tight">PartPilot</span>
-              <span className="text-[#e31e24] text-xs font-semibold -mt-1">AI</span>
+              <span className="text-[#e31e24] text-[10px] font-semibold -mt-1">OEM Parts + Pro Instructions in Seconds</span>
             </div>
           </Link>
 
