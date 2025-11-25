@@ -80,7 +80,7 @@ export default function Home() {
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 bg-[#e31e24]/10 border border-[#e31e24]/30 rounded-full px-4 py-1.5 mb-5">
               <Zap className="w-4 h-4 text-[#e31e24]" />
-              <span className="text-[#e31e24] text-sm font-medium">AI-Powered OEM Part Finder</span>
+              <span className="text-[#e31e24] text-sm font-medium">Power For The DIY Mechanic</span>
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
