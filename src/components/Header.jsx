@@ -1,19 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Menu, X, Car, Wrench, BookmarkCheck, History, Home } from 'lucide-react';
+import { Menu, X, Car, Wrench, BookmarkCheck, History, Home, ShoppingCart, Moon, Sun, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('darkMode') !== 'false';
+    }
+    return true;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('darkMode', darkMode.toString());
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+      document.body.style.backgroundColor = '#111';
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.body.style.backgroundColor = '#f5f5f5';
+    }
+  }, [darkMode]);
 
   const navItems = [
     { name: 'Home', icon: Home, page: 'Home' },
     { name: 'My Garage', icon: Car, page: 'MyGarage' },
-    { name: 'My Jobs', icon: Wrench, page: 'MyJobs' },
-    { name: 'Saved Parts', icon: BookmarkCheck, page: 'SavedParts' },
-    { name: 'Search History', icon: History, page: 'SearchHistory' },
+    { name: 'My Jobs', icon: Briefcase, page: 'MyJobs' },
+    { name: 'Parts List', icon: ShoppingCart, page: 'PartsList' },
+    { name: 'History', icon: History, page: 'SearchHistory' },
   ];
 
   return (
@@ -45,6 +62,16 @@ export default function Header() {
             ))}
           </nav>
 
+          {/* Theme Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setDarkMode(!darkMode)}
+            className="text-gray-400 hover:text-white hover:bg-[#222] hidden md:flex"
+          >
+            {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </Button>
+
           {/* Mobile Menu */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild className="md:hidden">
@@ -65,6 +92,15 @@ export default function Header() {
                     <span className="font-medium">{item.name}</span>
                   </Link>
                 ))}
+                
+                {/* Theme Toggle Mobile */}
+                <button
+                  onClick={() => setDarkMode(!darkMode)}
+                  className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-[#222] rounded-lg transition-all duration-200 mt-4 border-t border-[#333] pt-6"
+                >
+                  {darkMode ? <Sun className="w-5 h-5 text-[#e31e24]" /> : <Moon className="w-5 h-5 text-[#e31e24]" />}
+                  <span className="font-medium">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
+                </button>
               </div>
             </SheetContent>
           </Sheet>

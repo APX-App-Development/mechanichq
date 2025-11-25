@@ -4,6 +4,7 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import SearchBar from '@/components/SearchBar';
 import VehicleSelector from '@/components/VehicleSelector';
+import CommonJobs from '@/components/CommonJobs';
 import { Zap, Shield, Clock, Wrench, ChevronRight, Car, Bookmark, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -98,6 +99,12 @@ export default function Home() {
           {/* Vehicle Selector */}
           <div className="mb-8">
             <VehicleSelector onSelect={handleVehicleSelect} />
+          </div>
+
+          {/* Common Jobs Shortcuts */}
+          <div className="mb-8 max-w-4xl mx-auto">
+            <p className="text-gray-400 text-sm mb-3 text-center">Quick Jobs</p>
+            <CommonJobs savedVehicles={vehicles} />
           </div>
 
           {/* My Garage Quick Access */}
