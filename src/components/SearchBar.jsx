@@ -56,11 +56,7 @@ export default function SearchBar({ onSearch, isLoading, large = false }) {
           )}
           
           <div className={`absolute ${large ? 'bottom-4 right-4 left-4 flex items-center justify-between' : 'right-2 top-1/2 -translate-y-1/2'}`}>
-            {large && (
-              <p className="text-gray-400 text-sm">
-                Press Enter to search
-              </p>
-            )}
+
             <Button
               type="submit"
               disabled={isLoading || !query.trim()}
