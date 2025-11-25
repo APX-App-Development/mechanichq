@@ -47,7 +47,7 @@ export default function Header() {
               <span className="text-[#e31e24] text-xs font-semibold -mt-1">AI</span>
               </div>
               </Link>
-              <span className="hidden sm:block text-gray-500 text-[10px] ml-2">OEM Parts + Pro Instructions in Seconds</span>
+              <span className="hidden sm:block text-gray-500 text-xs ml-2">OEM Parts + Pro Instructions in Seconds</span>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1">
