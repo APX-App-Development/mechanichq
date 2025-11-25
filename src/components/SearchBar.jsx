@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Search, Loader2 } from 'lucide-react';
+import { Search, Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 export default function SearchBar({ onSearch, isLoading, large = false }) {
   const [query, setQuery] = useState('');
@@ -22,35 +21,64 @@ export default function SearchBar({ onSearch, isLoading, large = false }) {
 
   return (
     <form onSubmit={handleSubmit} className="w-full">
-      <div className={`relative flex items-center ${large ? 'max-w-3xl' : 'max-w-2xl'} mx-auto`}>
-        <div className="relative flex-1">
-          <Search className={`absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 ${large ? 'w-6 h-6' : 'w-5 h-5'}`} />
-          <Input
-            type="text"
+      <div className={`relative ${large ? 'max-w-4xl' : 'max-w-2xl'} mx-auto`}>
+        {/* AI Badge */}
+        {large && (
+          <div className="absolute -top-3 left-4 z-10 flex items-center gap-1.5 bg-gradient-to-r from-[#e31e24] to-[#ff4444] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
+            <Sparkles className="w-3 h-3" />
+            Powered by Claude AI
+          </div>
+        )}
+        
+        <div className="relative">
+          <textarea
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder='ex: front brakes 2017 Ford F-150 or "spark plugs 2022 Toyota Camry 2.5L"'
-            className={`w-full bg-white text-gray-900 border-0 rounded-l-xl rounded-r-none focus-visible:ring-2 focus-visible:ring-[#e31e24] ${
-              large ? 'h-16 pl-14 pr-4 text-lg' : 'h-12 pl-12 pr-4'
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e);
+              }
+            }}
+            placeholder={large 
+              ? `Describe what you need in plain English...\n\nExamples:\n• "Front brake pads and rotors for my 2019 Ford F-150 3.5L EcoBoost"\n• "I need spark plugs for a 2021 Toyota Camry 2.5L - what's the OEM part number?"\n• "Water pump replacement parts for 2018 Honda Accord"`
+              : 'Search for parts...'
+            }
+            className={`w-full bg-white text-gray-900 border-0 rounded-2xl focus:ring-4 focus:ring-[#e31e24]/30 resize-none ${
+              large 
+                ? 'min-h-[160px] pt-6 pb-20 px-5 text-lg leading-relaxed' 
+                : 'h-12 py-3 pl-12 pr-4'
             }`}
           />
-        </div>
-        <Button
-          type="submit"
-          disabled={isLoading || !query.trim()}
-          className={`bg-[#e31e24] hover:bg-[#c91a1f] text-white font-semibold rounded-l-none rounded-r-xl transition-all duration-200 ${
-            large ? 'h-16 px-8 text-lg' : 'h-12 px-6'
-          }`}
-        >
-          {isLoading ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <>
-              <Search className="w-5 h-5 mr-2" />
-              Search
-            </>
+          
+          {!large && (
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
           )}
-        </Button>
+          
+          <div className={`absolute ${large ? 'bottom-4 right-4 left-4 flex items-center justify-between' : 'right-2 top-1/2 -translate-y-1/2'}`}>
+            {large && (
+              <p className="text-gray-400 text-sm">
+                Press Enter to search
+              </p>
+            )}
+            <Button
+              type="submit"
+              disabled={isLoading || !query.trim()}
+              className={`bg-[#e31e24] hover:bg-[#c91a1f] text-white font-semibold shadow-lg shadow-[#e31e24]/25 transition-all duration-200 ${
+                large ? 'h-12 px-8 text-base rounded-xl' : 'h-8 px-4 rounded-lg'
+              }`}
+            >
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <>
+                  <Search className="w-5 h-5 mr-2" />
+                  Search Parts
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
       </div>
     </form>
   );
