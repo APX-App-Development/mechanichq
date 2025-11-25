@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
 import Header from '@/components/Header';
 
 export default function Layout({ children }) {

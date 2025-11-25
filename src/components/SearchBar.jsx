@@ -64,8 +64,8 @@ export default function SearchBar({ onSearch, isLoading, large = false }) {
             <Button
               type="submit"
               disabled={isLoading || !query.trim()}
-              className={`bg-[#e31e24] hover:bg-[#c91a1f] text-white font-semibold shadow-lg shadow-[#e31e24]/25 transition-all duration-200 ${
-                large ? 'h-12 px-8 text-base rounded-xl' : 'h-8 px-4 rounded-lg'
+              className={`bg-[#e31e24] hover:bg-[#c91a1f] text-white font-semibold shadow-lg shadow-[#e31e24]/25 transition-all duration-200 active:scale-[0.97] ${
+                large ? 'h-14 px-8 text-base rounded-xl tap-target' : 'h-10 px-4 rounded-lg tap-target'
               }`}
             >
               {isLoading ? (

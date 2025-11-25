@@ -263,7 +263,7 @@ Return the vehicle information in JSON format. VINs contain encoded information 
       <Button
         onClick={handleSearch}
         disabled={!year || !make || !model}
-        className="w-full mt-5 bg-[#e31e24] hover:bg-[#c91a1f] text-white font-semibold h-12 text-base shadow-lg shadow-[#e31e24]/20"
+        className="w-full mt-5 bg-[#e31e24] hover:bg-[#c91a1f] text-white font-semibold h-14 tap-target text-base shadow-lg shadow-[#e31e24]/20 rounded-xl transition-all duration-200 active:scale-[0.98]"
       >
         <Search className="w-5 h-5 mr-2" />
         Find Parts for This Vehicle
