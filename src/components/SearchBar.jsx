@@ -44,7 +44,7 @@ export default function SearchBar({ onSearch, isLoading, large = false }) {
               ? `Describe what you need in plain English...\n\nExamples:\n• "Front brake pads and rotors for my 2019 Ford F-150 3.5L EcoBoost"\n• "I need spark plugs for a 2021 Toyota Camry 2.5L - what's the OEM part number?"\n• "Water pump replacement parts for 2018 Honda Accord"`
               : 'Search for parts...'
             }
-            className={`w-full bg-white text-gray-900 border-0 rounded-2xl focus:ring-4 focus:ring-[#e31e24]/30 resize-none ${
+            className={`w-full bg-[#1a1a1a] text-white border border-[#333] rounded-2xl focus:ring-4 focus:ring-[#e31e24]/30 focus:border-[#e31e24] resize-none placeholder-gray-500 ${
               large 
                 ? 'min-h-[160px] pt-6 pb-20 px-5 text-lg leading-relaxed' 
                 : 'h-12 py-3 pl-12 pr-4'
@@ -52,7 +52,7 @@ export default function SearchBar({ onSearch, isLoading, large = false }) {
           />
           
           {!large && (
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#e31e24] w-5 h-5" />
           )}
           
           <div className={`absolute ${large ? 'bottom-4 right-4 left-4 flex items-center justify-between' : 'right-2 top-1/2 -translate-y-1/2'}`}>
