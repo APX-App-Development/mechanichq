@@ -87,7 +87,7 @@ export default function Home() {
               Find OEM Parts <span className="text-[#e31e24]">Instantly</span>
             </h1>
             <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
-              Get exact OEM part numbers, MSRP prices, supersession info, and purchase links — all in one search.
+              Get exact OEM part numbers, MSRP prices, supersession info, purchase links and install instructions — all in one search.
             </p>
           </div>
 
