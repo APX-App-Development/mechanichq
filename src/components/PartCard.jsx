@@ -22,7 +22,7 @@ const DifficultyWrenches = ({ level }) => {
   );
 };
 
-export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart }) {
+export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart, delay = 0 }) {
   const [saved, setSaved] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showTips, setShowTips] = useState(false);
@@ -88,7 +88,7 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart })
   );
 
   return (
-    <Card className="bg-[#1a1a1a] border-[#333] overflow-hidden">
+    <Card className="bg-[#1a1a1a] border-[#333] overflow-hidden card-hover rounded-2xl">
       <CardContent className="p-0">
         {/* Main Part Info Card */}
         <div className="p-5">
@@ -115,7 +115,8 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart })
           </h2>
           <button 
             onClick={copyPartNumber}
-            className="text-gray-400 font-mono text-lg hover:text-[#e31e24] transition-colors mb-4"
+            className="text-gray-400 font-mono text-lg hover:text-[#e31e24] transition-all duration-200 mb-4 animate-fade-in"
+            style={{ animationDelay: '100ms', animationFillMode: 'both' }}
           >
             #{part.oem_part_number}
           </button>
@@ -189,12 +190,12 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart })
           )}
 
           {/* Action Buttons */}
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <Button
               onClick={handleSave}
               disabled={saved || saving}
               variant="outline"
-              className={`flex-1 ${saved ? 'border-green-500 text-green-500' : 'border-[#444] text-white hover:bg-[#222]'}`}
+              className={`flex-1 h-12 tap-target rounded-xl font-semibold transition-all duration-200 ${saved ? 'border-green-500 text-green-500' : 'border-[#444] text-white hover:bg-[#222] active:scale-[0.98]'}`}
             >
               {saved ? <Check className="w-4 h-4 mr-2" /> : <BookmarkPlus className="w-4 h-4 mr-2" />}
               {saved ? 'Saved' : 'Save Part'}
@@ -202,7 +203,7 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart })
             {onAddToCart && (
               <Button
                 onClick={() => onAddToCart(part)}
-                className="flex-1 bg-[#e31e24] hover:bg-[#c91a1f] text-white"
+                className="flex-1 h-12 tap-target rounded-xl bg-[#e31e24] hover:bg-[#c91a1f] text-white font-semibold transition-all duration-200 active:scale-[0.98]"
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 Add to List

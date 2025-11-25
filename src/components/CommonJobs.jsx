@@ -51,17 +51,18 @@ export default function CommonJobs({ savedVehicles = [] }) {
 
   return (
     <>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-        {COMMON_JOBS.map((job) => (
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+        {COMMON_JOBS.map((job, idx) => (
           <button
             key={job.id}
             onClick={() => handleJobClick(job)}
-            className="flex flex-col items-center gap-2 p-4 bg-[#1a1a1a] hover:bg-[#222] border border-[#333] hover:border-[#e31e24]/50 rounded-xl transition-all group"
+            className="flex flex-col items-center gap-3 p-5 bg-[#1a1a1a] hover:bg-[#222] border border-[#333] hover:border-[#e31e24]/50 rounded-2xl transition-all duration-200 group card-hover tap-target animate-fade-in-up active:scale-[0.97]"
+            style={{ animationDelay: `${idx * 50}ms`, animationFillMode: 'both' }}
           >
-            <div className="w-12 h-12 bg-[#e31e24]/10 group-hover:bg-[#e31e24]/20 rounded-xl flex items-center justify-center transition-all">
-              <job.icon className="w-6 h-6 text-[#e31e24]" />
+            <div className="w-14 h-14 bg-[#e31e24]/10 group-hover:bg-[#e31e24]/20 rounded-xl flex items-center justify-center transition-all duration-200">
+              <job.icon className="w-7 h-7 text-[#e31e24]" />
             </div>
-            <span className="text-white text-xs font-medium text-center leading-tight">{job.name}</span>
+            <span className="text-white text-sm font-medium text-center leading-tight">{job.name}</span>
           </button>
         ))}
       </div>

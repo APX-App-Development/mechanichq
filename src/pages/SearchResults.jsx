@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import SearchBar from '@/components/SearchBar';
 import PartCard from '@/components/PartCard';
+import PullToRefresh from '@/components/PullToRefresh';
 import { Loader2, AlertCircle, ArrowLeft, Filter, Car, Sparkles, Briefcase, ShoppingCart, Check, Plus, X, WifiOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -322,7 +323,8 @@ IMPORTANT:
       </div>
 
       {/* Results */}
-      <div className="max-w-6xl mx-auto px-4 py-6">
+      <PullToRefresh onRefresh={() => searchParts(query)}>
+      <div className="max-w-6xl mx-auto px-4 py-8">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="relative mb-6">
@@ -383,19 +385,25 @@ IMPORTANT:
             </div>
             
             {/* Parts Grid */}
-            <div className="space-y-4">
+            <div className="space-y-5">
               {results.map((part, index) => (
-                <PartCard 
-                  key={index} 
-                  part={part} 
-                  vehicleInfo={vehicleInfo}
-                  onAddToCart={handleAddToCart}
-                />
+                <div 
+                  key={index}
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${index * 80}ms`, animationFillMode: 'both' }}
+                >
+                  <PartCard 
+                    part={part} 
+                    vehicleInfo={vehicleInfo}
+                    onAddToCart={handleAddToCart}
+                  />
+                </div>
               ))}
             </div>
           </>
         )}
       </div>
+      </PullToRefresh>
 
       {/* Cart Sidebar */}
       <Dialog open={showCart} onOpenChange={setShowCart}>

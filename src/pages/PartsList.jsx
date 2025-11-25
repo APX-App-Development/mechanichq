@@ -151,9 +151,13 @@ export default function PartsList() {
           </div>
         ) : (
           <>
-            <div className="space-y-3 mb-6">
-              {parts.map((part) => (
-                <Card key={part.id} className="bg-[#1a1a1a] border-[#333]">
+            <div className="space-y-4 mb-6">
+              {parts.map((part, idx) => (
+                <Card 
+                  key={part.id} 
+                  className="bg-[#1a1a1a] border-[#333] rounded-2xl card-hover animate-fade-in-up"
+                  style={{ animationDelay: `${idx * 60}ms`, animationFillMode: 'both' }}
+                >
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">

@@ -192,9 +192,13 @@ export default function MyGarage() {
             </Button>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 gap-4">
-            {vehicles.map((vehicle) => (
-              <Card key={vehicle.id} className="bg-[#1a1a1a] border-[#333] hover:border-[#e31e24]/50 transition-all">
+          <div className="grid md:grid-cols-2 gap-5">
+            {vehicles.map((vehicle, idx) => (
+              <Card 
+                key={vehicle.id} 
+                className="bg-[#1a1a1a] border-[#333] hover:border-[#e31e24]/50 transition-all duration-200 card-hover rounded-2xl animate-fade-in-up"
+                style={{ animationDelay: `${idx * 80}ms`, animationFillMode: 'both' }}
+              >
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between mb-4">
                     <div>
@@ -220,7 +224,7 @@ export default function MyGarage() {
                   
                   <Button
                     onClick={() => handleSearchParts(vehicle)}
-                    className="w-full bg-[#222] hover:bg-[#333] text-white border border-[#444]"
+                    className="w-full h-12 tap-target bg-[#222] hover:bg-[#333] text-white border border-[#444] rounded-xl font-semibold transition-all duration-200 active:scale-[0.98]"
                   >
                     <Search className="w-4 h-4 mr-2" />
                     Search Parts
