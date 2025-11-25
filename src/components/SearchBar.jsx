@@ -55,7 +55,7 @@ export default function SearchBar({ onSearch, isLoading, large = false }) {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
           )}
           
-          <div className={`absolute ${large ? 'bottom-4 right-4 left-4 flex items-center justify-between' : 'right-2 top-1/2 -translate-y-1/2'}`}>
+          <div className={`absolute ${large ? 'top-4 right-4' : 'right-2 top-1/2 -translate-y-1/2'}`}>
 
             <Button
               type="submit"
