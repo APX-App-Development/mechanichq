@@ -11,6 +11,7 @@ export default function Header() {
   const navItems = [
     { name: 'Home', icon: Home, page: 'Home' },
     { name: 'My Garage', icon: Car, page: 'MyGarage' },
+    { name: 'My Jobs', icon: Wrench, page: 'MyJobs' },
     { name: 'Saved Parts', icon: BookmarkCheck, page: 'SavedParts' },
     { name: 'Search History', icon: History, page: 'SearchHistory' },
   ];

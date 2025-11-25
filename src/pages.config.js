@@ -3,6 +3,7 @@ import SearchResults from './pages/SearchResults';
 import MyGarage from './pages/MyGarage';
 import SavedParts from './pages/SavedParts';
 import SearchHistory from './pages/SearchHistory';
+import MyJobs from './pages/MyJobs';
 import __Layout from './Layout.jsx';
 
 
@@ -12,6 +13,7 @@ export const PAGES = {
     "MyGarage": MyGarage,
     "SavedParts": SavedParts,
     "SearchHistory": SearchHistory,
+    "MyJobs": MyJobs,
 }
 
 export const pagesConfig = {
