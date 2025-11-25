@@ -11,18 +11,6 @@ export default function Layout({ children }) {
 
   return (
     <div className={`min-h-screen flex flex-col transition-colors duration-300 ${darkMode ? 'bg-[#111]' : 'bg-gray-100'}`}>
-      {/* PWA Meta Tags */}
-      <head>
-        <meta name="application-name" content="PartPilot AI" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="PartPilot AI" />
-        <meta name="description" content="Find OEM auto parts instantly with AI. Get genuine part numbers, MSRP prices, and pro installation instructions in seconds." />
-        <meta name="theme-color" content="#e31e24" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icon-192.png" />
-      </head>
       <style>{`
         :root {
           --primary: #e31e24;
