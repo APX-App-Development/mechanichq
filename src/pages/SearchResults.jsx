@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import SearchBar from '@/components/SearchBar';
 import PartCard from '@/components/PartCard';
-import { Loader2, AlertCircle, ArrowLeft, Filter, Car, Sparkles, Briefcase, ShoppingCart, Check, Plus, X } from 'lucide-react';
+import { Loader2, AlertCircle, ArrowLeft, Filter, Car, Sparkles, Briefcase, ShoppingCart, Check, Plus, X, WifiOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -28,6 +28,30 @@ export default function SearchResults() {
   const [showJobDialog, setShowJobDialog] = useState(false);
   const [jobName, setJobName] = useState('');
   const [savingJob, setSavingJob] = useState(false);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+
+  // Offline mode - cache searches
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  const cacheSearch = (query, results) => {
+    const cached = JSON.parse(localStorage.getItem('cachedSearches') || '[]');
+    const newCache = [{ query, results, timestamp: Date.now() }, ...cached.filter(c => c.query !== query)].slice(0, 10);
+    localStorage.setItem('cachedSearches', JSON.stringify(newCache));
+  };
+
+  const getCachedSearch = (query) => {
+    const cached = JSON.parse(localStorage.getItem('cachedSearches') || '[]');
+    return cached.find(c => c.query.toLowerCase() === query.toLowerCase());
+  };
 
   const vehicleInfo = year && make && model 
     ? `${year} ${make} ${model}${engine ? ` ${engine}` : ''}`
@@ -37,6 +61,21 @@ export default function SearchResults() {
     setLoading(true);
     setError(null);
     setQuery(searchQuery);
+
+    // Check for cached results if offline
+    if (isOffline) {
+      const cached = getCachedSearch(searchQuery);
+      if (cached) {
+        setResults(cached.results);
+        setLoading(false);
+        toast.info('Showing cached results (offline mode)');
+        return;
+      } else {
+        setError('You are offline. No cached results for this search.');
+        setLoading(false);
+        return;
+      }
+    }
     
     try {
       const response = await base44.integrations.Core.InvokeLLM({
@@ -157,6 +196,9 @@ IMPORTANT:
 
       setResults(response.parts || []);
       
+      // Cache the search for offline use
+      cacheSearch(searchQuery, response.parts || []);
+      
       await base44.entities.PartSearch.create({
         query: searchQuery,
         vehicle_year: year ? parseInt(year) : null,
@@ -259,15 +301,23 @@ IMPORTANT:
           
           <SearchBar onSearch={handleNewSearch} isLoading={loading} />
           
-          {vehicleInfo && (
-            <div className="flex items-center gap-2 mt-4">
-              <Car className="w-4 h-4 text-[#e31e24]" />
-              <span className="text-gray-400 text-sm">Results for:</span>
-              <Badge className="bg-[#1a1a1a] text-white border border-[#333]">
-                {vehicleInfo}
+          <div className="flex items-center gap-2 mt-4 flex-wrap">
+            {isOffline && (
+              <Badge className="bg-amber-500/20 text-amber-400 border-0">
+                <WifiOff className="w-3 h-3 mr-1" />
+                Offline Mode
               </Badge>
-            </div>
-          )}
+            )}
+            {vehicleInfo && (
+              <>
+                <Car className="w-4 h-4 text-[#e31e24]" />
+                <span className="text-gray-400 text-sm">Results for:</span>
+                <Badge className="bg-[#1a1a1a] text-white border border-[#333]">
+                  {vehicleInfo}
+                </Badge>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
