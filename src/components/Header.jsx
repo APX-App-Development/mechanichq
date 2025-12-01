@@ -43,7 +43,7 @@ export default function Header() {
               <Wrench className="w-6 h-6 text-white" />
             </div>
             <div className="flex flex-col">
-              <span className="text-white font-bold text-xl tracking-tight">PartPilot</span>
+              <span className="text-white font-bold text-xl tracking-tight">Part Pulse</span>
               <span className="text-[#e31e24] text-xs font-semibold -mt-1">AI</span>
               </div>
               </Link>

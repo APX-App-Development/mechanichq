@@ -67,7 +67,7 @@ export default function Layout({ children }) {
       <footer className={`border-t py-6 ${darkMode ? 'bg-[#0a0a0a] border-[#222]' : 'bg-gray-200 border-gray-300'}`}>
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>
-            © {new Date().getFullYear()} PartPilot AI. Find genuine OEM parts instantly.
+            © {new Date().getFullYear()} Part Pulse. Find genuine OEM parts instantly.
           </p>
           <p className={`text-xs mt-1 ${darkMode ? 'text-gray-600' : 'text-gray-500'}`}>
             Powered by Claude AI • Not affiliated with any vehicle manufacturer

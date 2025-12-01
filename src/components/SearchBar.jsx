@@ -26,7 +26,7 @@ export default function SearchBar({ onSearch, isLoading, large = false }) {
         {large && (
           <div className="absolute -top-3 left-4 z-10 flex items-center gap-1.5 bg-gradient-to-r from-[#e31e24] to-[#ff4444] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
             <Sparkles className="w-3 h-3" />
-            Powered by Claude AI
+            AI-Powered Search
           </div>
         )}
         
