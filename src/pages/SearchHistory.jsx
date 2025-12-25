@@ -56,7 +56,7 @@ export default function SearchHistory() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <History className="w-7 h-7 text-[#e31e24]" />
+              <History className="w-7 h-7 text-orange-500" />
               Search History
             </h1>
             <p className="text-gray-400 mt-1">Your recent part searches</p>
@@ -77,7 +77,7 @@ export default function SearchHistory() {
         {/* Search List */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 text-[#e31e24] animate-spin" />
+            <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
           </div>
         ) : searches.length === 0 ? (
           <div className="text-center py-20">
@@ -85,7 +85,7 @@ export default function SearchHistory() {
             <h3 className="text-white font-medium text-lg mb-2">No search history</h3>
             <p className="text-gray-400 text-sm mb-6">Your part searches will be saved here</p>
             <Link to={createPageUrl('Home')}>
-              <Button className="bg-[#e31e24] hover:bg-[#c91a1f]">
+              <Button className="bg-orange-500 hover:bg-orange-600">
                 <Search className="w-4 h-4 mr-2" />
                 Start Searching
               </Button>
@@ -94,7 +94,7 @@ export default function SearchHistory() {
         ) : (
           <div className="space-y-3">
             {searches.map((search) => (
-              <Card key={search.id} className="bg-[#1a1a1a] border-[#333] hover:border-[#e31e24]/50 transition-all group">
+              <Card key={search.id} className="bg-[#1a1a1a] border-[#333] hover:border-orange-500/50 transition-all group">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between gap-4">
                     <Link 
@@ -102,7 +102,7 @@ export default function SearchHistory() {
                       className="flex-1 flex items-center gap-4"
                     >
                       <div className="bg-[#222] p-2.5 rounded-lg">
-                        <Search className="w-5 h-5 text-[#e31e24]" />
+                        <Search className="w-5 h-5 text-orange-500" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-white font-medium truncate">{search.query}</p>
@@ -118,7 +118,7 @@ export default function SearchHistory() {
                           )}
                         </div>
                       </div>
-                      <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-[#e31e24] transition-colors" />
+                      <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-orange-500 transition-colors" />
                     </Link>
                     
                     <Button
