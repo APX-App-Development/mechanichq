@@ -92,7 +92,7 @@ export default function MyGarage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <Car className="w-7 h-7 text-[#e31e24]" />
+              <Car className="w-7 h-7 text-orange-500" />
               My Garage
             </h1>
             <p className="text-gray-400 mt-1">Save your vehicles for quick part searches</p>
@@ -100,7 +100,7 @@ export default function MyGarage() {
           
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-[#e31e24] hover:bg-[#c91a1f]">
+              <Button className="bg-orange-500 hover:bg-orange-600">
                 <Plus className="w-4 h-4 mr-2" />
                 Add Vehicle
               </Button>
@@ -108,7 +108,7 @@ export default function MyGarage() {
             <DialogContent className="bg-[#1a1a1a] border-[#333] text-white max-w-md">
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
-                  <Car className="w-5 h-5 text-[#e31e24]" />
+                  <Car className="w-5 h-5 text-orange-500" />
                   Add New Vehicle
                 </DialogTitle>
               </DialogHeader>
@@ -166,7 +166,7 @@ export default function MyGarage() {
                 <Button
                   onClick={handleAddVehicle}
                   disabled={saving}
-                  className="w-full bg-[#e31e24] hover:bg-[#c91a1f]"
+                  className="w-full bg-orange-500 hover:bg-orange-600"
                 >
                   {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                   Add Vehicle
@@ -179,14 +179,14 @@ export default function MyGarage() {
         {/* Vehicle List */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 text-[#e31e24] animate-spin" />
+            <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
           </div>
         ) : vehicles.length === 0 ? (
           <div className="text-center py-20">
             <Car className="w-16 h-16 text-gray-600 mx-auto mb-4" />
             <h3 className="text-white font-medium text-lg mb-2">No vehicles in your garage</h3>
             <p className="text-gray-400 text-sm mb-6">Add your first vehicle to quickly search for parts</p>
-            <Button onClick={() => setDialogOpen(true)} className="bg-[#e31e24] hover:bg-[#c91a1f]">
+            <Button onClick={() => setDialogOpen(true)} className="bg-orange-500 hover:bg-orange-600">
               <Plus className="w-4 h-4 mr-2" />
               Add Your First Vehicle
             </Button>
@@ -196,7 +196,7 @@ export default function MyGarage() {
             {vehicles.map((vehicle, idx) => (
               <Card 
                 key={vehicle.id} 
-                className="bg-[#1a1a1a] border-[#333] hover:border-[#e31e24]/50 transition-all duration-200 card-hover rounded-2xl animate-fade-in-up"
+                className="bg-[#1a1a1a] border-[#333] hover:border-orange-500/50 transition-all duration-200 card-hover rounded-2xl animate-fade-in-up"
                 style={{ animationDelay: `${idx * 80}ms`, animationFillMode: 'both' }}
               >
                 <CardContent className="p-5">
@@ -206,7 +206,7 @@ export default function MyGarage() {
                         {vehicle.year} {vehicle.make} {vehicle.model}
                       </h3>
                       {vehicle.nickname && (
-                        <p className="text-[#e31e24] text-sm font-medium mt-0.5">{vehicle.nickname}</p>
+                        <p className="text-orange-500 text-sm font-medium mt-0.5">{vehicle.nickname}</p>
                       )}
                       {vehicle.engine && (
                         <p className="text-gray-400 text-sm mt-1">{vehicle.engine}</p>

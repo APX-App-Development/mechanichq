@@ -24,7 +24,7 @@ export default function SearchBar({ onSearch, isLoading, large = false }) {
       <div className={`relative ${large ? 'max-w-4xl' : 'max-w-2xl'} mx-auto`}>
         {/* AI Badge */}
         {large && (
-          <div className="absolute -top-3 left-4 z-10 flex items-center gap-1.5 bg-gradient-to-r from-[#e31e24] to-[#ff4444] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
+          <div className="absolute -top-3 left-4 z-10 flex items-center gap-1.5 bg-gradient-to-r from-orange-600 to-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
             <Sparkles className="w-3 h-3" />
             AI-Powered Search
           </div>
@@ -44,7 +44,7 @@ export default function SearchBar({ onSearch, isLoading, large = false }) {
               ? `Describe what you need in plain English...\n\nExamples:\n• "Front brake pads and rotors for my 2019 Ford F-150 3.5L EcoBoost"\n• "I need spark plugs for a 2021 Toyota Camry 2.5L - what's the OEM part number?"\n• "Water pump replacement parts for 2018 Honda Accord"`
               : 'Search for parts...'
             }
-            className={`w-full bg-[#1a1a1a] text-white placeholder-gray-500 border-2 border-[#333] rounded-2xl focus:ring-4 focus:ring-[#e31e24]/30 focus:border-[#e31e24] resize-none transition-all duration-200 ${
+            className={`w-full bg-[#1a1a1a] text-white placeholder-gray-500 border-2 border-[#333] rounded-2xl focus:ring-4 focus:ring-orange-500/30 focus:border-orange-500 resize-none transition-all duration-200 ${
               large 
                 ? 'min-h-[160px] pt-6 pb-20 px-5 text-lg leading-relaxed' 
                 : 'h-12 py-3 pl-12 pr-4'
@@ -60,7 +60,7 @@ export default function SearchBar({ onSearch, isLoading, large = false }) {
             <Button
               type="submit"
               disabled={isLoading || !query.trim()}
-              className={`bg-[#e31e24] hover:bg-[#c91a1f] text-white font-semibold shadow-lg shadow-[#e31e24]/25 transition-all duration-200 active:scale-[0.97] ${
+              className={`bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-lg shadow-orange-500/25 transition-all duration-200 active:scale-[0.97] ${
                 large ? 'h-14 px-8 text-base rounded-xl tap-target' : 'h-10 px-4 rounded-lg tap-target'
               }`}
             >

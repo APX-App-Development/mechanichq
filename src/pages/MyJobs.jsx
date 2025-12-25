@@ -62,7 +62,7 @@ export default function MyJobs() {
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Briefcase className="w-7 h-7 text-[#e31e24]" />
+            <Briefcase className="w-7 h-7 text-orange-500" />
             My Jobs
           </h1>
           <p className="text-gray-400 mt-1">Track your repair projects and parts lists</p>
@@ -70,7 +70,7 @@ export default function MyJobs() {
 
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 text-[#e31e24] animate-spin" />
+            <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
           </div>
         ) : jobs.length === 0 ? (
           <div className="text-center py-20">
@@ -127,7 +127,7 @@ export default function MyJobs() {
                                 <p className="text-white text-sm truncate">{part.part_name}</p>
                                 <p className="text-gray-500 text-xs font-mono">#{part.oem_part_number}</p>
                               </div>
-                              <span className="text-[#e31e24] font-medium">
+                              <span className="text-orange-500 font-medium">
                                 ${part.msrp_price?.toFixed(2)}
                               </span>
                             </div>

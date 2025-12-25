@@ -94,7 +94,7 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart, d
         <div className="p-5">
           {/* Category & OEM Badge */}
           <div className="flex items-center gap-2 mb-3 flex-wrap">
-            <Badge className="bg-[#e31e24]/20 text-[#e31e24] border-0 text-xs font-semibold">
+            <Badge className="bg-orange-500/20 text-orange-500 border-0 text-xs font-semibold">
               {part.category || 'OEM Part'}
             </Badge>
             {part.manufacturer && (
@@ -115,7 +115,7 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart, d
           </h2>
           <button 
             onClick={copyPartNumber}
-            className="text-gray-400 font-mono text-lg hover:text-[#e31e24] transition-all duration-200 mb-4 animate-fade-in"
+            className="text-gray-400 font-mono text-lg hover:text-orange-500 transition-all duration-200 mb-4 animate-fade-in"
             style={{ animationDelay: '100ms', animationFillMode: 'both' }}
           >
             #{part.oem_part_number}
@@ -123,7 +123,7 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart, d
 
           {/* MSRP Price - Red & Bold */}
           <div className="flex items-baseline gap-3 mb-4">
-            <span className="text-[#e31e24] font-bold text-3xl">
+            <span className="text-orange-500 font-bold text-3xl">
               ${part.msrp_price?.toFixed(2) || 'N/A'}
             </span>
             <span className="text-gray-500 text-sm">MSRP</span>
@@ -203,7 +203,7 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart, d
             {onAddToCart && (
               <Button
                 onClick={() => onAddToCart(part)}
-                className="flex-1 h-12 tap-target rounded-xl bg-[#e31e24] hover:bg-[#c91a1f] text-white font-semibold transition-all duration-200 active:scale-[0.98]"
+                className="flex-1 h-12 tap-target rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold transition-all duration-200 active:scale-[0.98]"
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 Add to List
@@ -220,8 +220,8 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart, d
               className="w-full px-5 py-4 flex items-center justify-between text-white hover:bg-[#222] transition-all"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#e31e24]/20 rounded-xl flex items-center justify-center">
-                  <Wrench className="w-5 h-5 text-[#e31e24]" />
+                <div className="w-10 h-10 bg-orange-500/20 rounded-xl flex items-center justify-center">
+                  <Wrench className="w-5 h-5 text-orange-500" />
                 </div>
                 <div className="text-left">
                   <span className="font-semibold block">Installation Instructions</span>
@@ -236,7 +236,7 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart, d
                 {/* Quick Stats Row */}
                 <div className="grid grid-cols-3 gap-3">
                   <div className="bg-[#222] rounded-xl p-3 text-center">
-                    <Clock className="w-5 h-5 text-[#e31e24] mx-auto mb-1" />
+                    <Clock className="w-5 h-5 text-orange-500 mx-auto mb-1" />
                     <p className="text-white font-medium text-sm">{part.estimated_time || '1-2 hrs'}</p>
                     <p className="text-gray-500 text-xs">Time</p>
                   </div>
@@ -248,7 +248,7 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart, d
                     <p className="text-gray-500 text-xs">Difficulty</p>
                   </div>
                   <div className="bg-[#222] rounded-xl p-3 text-center">
-                    <Wrench className="w-5 h-5 text-[#e31e24] mx-auto mb-1" />
+                    <Wrench className="w-5 h-5 text-orange-500 mx-auto mb-1" />
                     <p className="text-white font-medium text-sm">{part.tools_needed?.length || 3}+</p>
                     <p className="text-gray-500 text-xs">Tools</p>
                   </div>
@@ -275,7 +275,7 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart, d
                 <div className="space-y-3">
                   {part.installation_steps.map((step, index) => (
                     <div key={index} className="flex gap-4">
-                      <div className="shrink-0 w-8 h-8 bg-[#e31e24] rounded-full flex items-center justify-center text-white text-sm font-bold">
+                      <div className="shrink-0 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
                         {index + 1}
                       </div>
                       <div className="flex-1 pt-1">

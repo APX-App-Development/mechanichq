@@ -292,7 +292,7 @@ IMPORTANT:
             {cartItems.length > 0 && (
               <Button
                 onClick={() => setShowCart(true)}
-                className="bg-[#e31e24] hover:bg-[#c91a1f] text-white"
+                className="bg-orange-500 hover:bg-orange-600 text-white"
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 {cartItems.length} Parts (${cartTotal.toFixed(2)})
@@ -311,7 +311,7 @@ IMPORTANT:
             )}
             {vehicleInfo && (
               <>
-                <Car className="w-4 h-4 text-[#e31e24]" />
+                <Car className="w-4 h-4 text-orange-500" />
                 <span className="text-gray-400 text-sm">Results for:</span>
                 <Badge className="bg-[#1a1a1a] text-white border border-[#333]">
                   {vehicleInfo}
@@ -328,8 +328,8 @@ IMPORTANT:
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="relative mb-6">
-              <div className="w-16 h-16 border-4 border-[#222] border-t-[#e31e24] rounded-full animate-spin" />
-              <Sparkles className="w-6 h-6 text-[#e31e24] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+              <div className="w-16 h-16 border-4 border-[#222] border-t-orange-500 rounded-full animate-spin" />
+              <Sparkles className="w-6 h-6 text-orange-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
             </div>
             <p className="text-white font-medium mb-2">Searching OEM Catalogs...</p>
             <p className="text-gray-500 text-sm text-center max-w-md">
@@ -341,7 +341,7 @@ IMPORTANT:
             <AlertCircle className="w-12 h-12 text-red-500 mb-4" />
             <p className="text-white font-medium mb-2">Search Error</p>
             <p className="text-gray-400 text-sm mb-4">{error}</p>
-            <Button onClick={() => searchParts(query)} className="bg-[#e31e24] hover:bg-[#c91a1f]">
+            <Button onClick={() => searchParts(query)} className="bg-orange-500 hover:bg-orange-600">
               Try Again
             </Button>
           </div>
@@ -375,7 +375,7 @@ IMPORTANT:
                 {cartItems.length > 0 && (
                   <Button
                     onClick={() => setShowJobDialog(true)}
-                    className="bg-[#e31e24] hover:bg-[#c91a1f]"
+                    className="bg-orange-500 hover:bg-orange-600"
                   >
                     <Briefcase className="w-4 h-4 mr-2" />
                     Save to My Jobs
@@ -410,7 +410,7 @@ IMPORTANT:
         <DialogContent className="bg-[#1a1a1a] border-[#333] text-white max-w-md max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <ShoppingCart className="w-5 h-5 text-[#e31e24]" />
+              <ShoppingCart className="w-5 h-5 text-orange-500" />
               Parts List ({cartItems.length})
             </DialogTitle>
           </DialogHeader>
@@ -423,7 +423,7 @@ IMPORTANT:
                   <p className="text-gray-400 text-xs font-mono">#{part.oem_part_number}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[#e31e24] font-semibold">${part.msrp_price?.toFixed(2)}</span>
+                  <span className="text-orange-500 font-semibold">${part.msrp_price?.toFixed(2)}</span>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -458,7 +458,7 @@ IMPORTANT:
         <DialogContent className="bg-[#1a1a1a] border-[#333] text-white max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-[#e31e24]" />
+              <Briefcase className="w-5 h-5 text-orange-500" />
               Save to My Jobs
             </DialogTitle>
           </DialogHeader>
@@ -478,7 +478,7 @@ IMPORTANT:
               <p className="text-gray-400 text-sm mb-2">This job includes:</p>
               <p className="text-white font-medium">{cartItems.length} parts</p>
               <p className="text-gray-400 text-sm">{vehicleInfo}</p>
-              <p className="text-[#e31e24] font-semibold mt-2">Est. ${cartTotal.toFixed(2)}</p>
+              <p className="text-orange-500 font-semibold mt-2">Est. ${cartTotal.toFixed(2)}</p>
             </div>
 
             <Button

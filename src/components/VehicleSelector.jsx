@@ -122,7 +122,7 @@ Return the vehicle information in JSON format. VINs contain encoded information 
     <div className={`bg-[#1a1a1a] border border-[#333] rounded-2xl p-6 ${compact ? '' : 'max-w-4xl mx-auto'}`}>
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
-          <Car className="w-5 h-5 text-[#e31e24]" />
+          <Car className="w-5 h-5 text-orange-500" />
           <span className="text-white font-semibold">Select Your Vehicle</span>
         </div>
         
@@ -263,7 +263,7 @@ Return the vehicle information in JSON format. VINs contain encoded information 
       <Button
         onClick={handleSearch}
         disabled={!year || !make || !model}
-        className="w-full mt-5 bg-[#e31e24] hover:bg-[#c91a1f] text-white font-semibold h-14 tap-target text-base shadow-lg shadow-[#e31e24]/20 rounded-xl transition-all duration-200 active:scale-[0.98]"
+        className="w-full mt-5 bg-orange-500 hover:bg-orange-600 text-white font-semibold h-14 tap-target text-base shadow-lg shadow-orange-500/20 rounded-xl transition-all duration-200 active:scale-[0.98]"
       >
         <Search className="w-5 h-5 mr-2" />
         Find Parts for This Vehicle

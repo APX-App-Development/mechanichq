@@ -56,11 +56,11 @@ export default function CommonJobs({ savedVehicles = [] }) {
           <button
             key={job.id}
             onClick={() => handleJobClick(job)}
-            className="flex flex-col items-center gap-3 p-5 bg-[#1a1a1a] hover:bg-[#222] border border-[#333] hover:border-[#e31e24]/50 rounded-2xl transition-all duration-200 group card-hover tap-target animate-fade-in-up active:scale-[0.97]"
+            className="flex flex-col items-center gap-3 p-5 bg-[#1a1a1a] hover:bg-[#222] border border-[#333] hover:border-orange-500/50 rounded-2xl transition-all duration-200 group card-hover tap-target animate-fade-in-up active:scale-[0.97]"
             style={{ animationDelay: `${idx * 50}ms`, animationFillMode: 'both' }}
           >
-            <div className="w-14 h-14 bg-[#e31e24]/10 group-hover:bg-[#e31e24]/20 rounded-xl flex items-center justify-center transition-all duration-200">
-              <job.icon className="w-7 h-7 text-[#e31e24]" />
+            <div className="w-14 h-14 bg-orange-500/10 group-hover:bg-orange-500/20 rounded-xl flex items-center justify-center transition-all duration-200">
+              <job.icon className="w-7 h-7 text-orange-500" />
             </div>
             <span className="text-white text-sm font-medium text-center leading-tight">{job.name}</span>
           </button>
@@ -103,7 +103,7 @@ export default function CommonJobs({ savedVehicles = [] }) {
             <Button
               onClick={handleSearch}
               disabled={!year || !make || !model}
-              className="w-full bg-[#e31e24] hover:bg-[#c91a1f]"
+              className="w-full bg-orange-500 hover:bg-orange-600"
             >
               <Search className="w-4 h-4 mr-2" />
               Find {selectedJob?.name}

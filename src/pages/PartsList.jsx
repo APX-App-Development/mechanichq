@@ -55,7 +55,7 @@ export default function PartsList() {
         <title>PartPilot Parts List</title>
         <style>
           body { font-family: Arial, sans-serif; padding: 20px; }
-          h1 { color: #e31e24; }
+          h1 { color: #f97316; }
           table { width: 100%; border-collapse: collapse; margin-top: 20px; }
           th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
           th { background: #f5f5f5; }
@@ -119,7 +119,7 @@ export default function PartsList() {
         <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <ShoppingCart className="w-7 h-7 text-[#e31e24]" />
+              <ShoppingCart className="w-7 h-7 text-orange-500" />
               My Parts List
             </h1>
             <p className="text-gray-400 mt-1">{parts.length} parts saved</p>
@@ -141,7 +141,7 @@ export default function PartsList() {
 
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 text-[#e31e24] animate-spin" />
+            <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
           </div>
         ) : parts.length === 0 ? (
           <div className="text-center py-20">
@@ -164,7 +164,7 @@ export default function PartsList() {
                         <h3 className="text-white font-semibold truncate">{part.part_name}</h3>
                         <button 
                           onClick={() => copyPartNumber(part.oem_part_number)}
-                          className="text-gray-400 font-mono text-sm hover:text-[#e31e24] flex items-center gap-1"
+                          className="text-gray-400 font-mono text-sm hover:text-orange-500 flex items-center gap-1"
                         >
                           #{part.oem_part_number}
                           <Copy className="w-3 h-3" />
@@ -174,7 +174,7 @@ export default function PartsList() {
                         )}
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-[#e31e24] font-bold text-lg">
+                        <span className="text-orange-500 font-bold text-lg">
                           ${part.msrp_price?.toFixed(2) || 'N/A'}
                         </span>
                         <Button
