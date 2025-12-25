@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Menu, X, Car, Wrench, BookmarkCheck, History, Home, ShoppingCart, Moon, Sun, Briefcase } from 'lucide-react';
+import { Menu, X, Car, Wrench, BookmarkCheck, History, Home, ShoppingCart, Moon, Sun, Briefcase, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
@@ -27,6 +27,7 @@ export default function Header() {
 
   const navItems = [
     { name: 'Home', icon: Home, page: 'Home' },
+    { name: 'Catalog', icon: BookOpen, page: 'PartsCatalog' },
     { name: 'My Garage', icon: Car, page: 'MyGarage' },
     { name: 'My Jobs', icon: Briefcase, page: 'MyJobs' },
     { name: 'Parts List', icon: ShoppingCart, page: 'PartsList' },
