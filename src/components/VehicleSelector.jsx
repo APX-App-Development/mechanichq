@@ -88,32 +88,37 @@ export default function VehicleSelector({ onSelect, compact = false }) {
   const decodeVin = async (vin) => {
     setDecodingVin(true);
     try {
-      const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `Decode this VIN: ${vin}
+      // Use NHTSA's free VIN decoder API
+      const response = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${vin}?format=json`);
+      const data = await response.json();
+      
+      if (data.Results && data.Results[0]) {
+        const vehicle = data.Results[0];
         
-Return the vehicle information in JSON format. VINs contain encoded information about the vehicle.`,
-        add_context_from_internet: true,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            year: { type: "number" },
-            make: { type: "string" },
-            model: { type: "string" },
-            engine: { type: "string" },
-            trim: { type: "string" }
+        // Check if VIN was successfully decoded
+        if (vehicle.ErrorCode === "0" || vehicle.Make) {
+          const year = vehicle.ModelYear;
+          const make = vehicle.Make;
+          const model = vehicle.Model;
+          const engine = vehicle.EngineModel || vehicle.DisplacementL ? `${vehicle.DisplacementL}L` : '';
+          
+          if (year && make && model) {
+            setYear(year.toString());
+            setMake(make);
+            setModel(model);
+            if (engine) setEngine(engine);
+            toast.success(`Found: ${year} ${make} ${model}`);
+          } else {
+            toast.error('Could not decode VIN. Please check the VIN and try again.');
           }
+        } else {
+          toast.error('Invalid VIN. Please check and try again.');
         }
-      });
-
-      if (result.year && result.make && result.model) {
-        setYear(result.year.toString());
-        setMake(result.make);
-        setModel(result.model);
-        if (result.engine) setEngine(result.engine);
-        toast.success(`Found: ${result.year} ${result.make} ${result.model}`);
+      } else {
+        toast.error('Failed to decode VIN');
       }
     } catch (err) {
-      toast.error('Failed to decode VIN');
+      toast.error('Failed to decode VIN. Please check your connection.');
     }
     setDecodingVin(false);
   };
