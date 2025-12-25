@@ -444,7 +444,7 @@ IMPORTANT:
             </div>
             <Button
               onClick={() => { setShowCart(false); setShowJobDialog(true); }}
-              className="w-full bg-[#e31e24] hover:bg-[#c91a1f]"
+              className="w-full bg-orange-500 hover:bg-orange-600"
             >
               <Briefcase className="w-4 h-4 mr-2" />
               Save to My Jobs
@@ -484,7 +484,7 @@ IMPORTANT:
             <Button
               onClick={handleSaveToJob}
               disabled={!jobName.trim() || savingJob}
-              className="w-full bg-[#e31e24] hover:bg-[#c91a1f]"
+              className="w-full bg-orange-500 hover:bg-orange-600"
             >
               {savingJob ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Check className="w-4 h-4 mr-2" />}
               Save Job
