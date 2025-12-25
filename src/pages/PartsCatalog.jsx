@@ -335,7 +335,7 @@ export default function PartsCatalog() {
               </Badge>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
               {filteredCategories.map((category) => {
                 const Icon = category.icon;
                 const itemCount = category.subcategories 
@@ -345,20 +345,28 @@ export default function PartsCatalog() {
                   <button
                     key={category.id}
                     onClick={() => handleCategoryClick(category)}
-                    className="bg-[#1a1a1a] border border-[#333] rounded-2xl p-6 text-left hover:border-orange-500/50 transition-all duration-300 group"
+                    className="bg-[#1a1a1a] border-2 border-[#333] rounded-xl overflow-hidden text-left hover:border-orange-500 transition-all duration-200 group"
                   >
-                    <div className={`w-14 h-14 rounded-xl border ${colorClasses[category.color]} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                      <Icon className="w-7 h-7" />
+                    {/* Icon/Image Section */}
+                    <div className={`h-32 md:h-40 flex items-center justify-center bg-gradient-to-br ${colorClasses[category.color].replace('border-', 'from-')} to-[#1a1a1a] relative`}>
+                      <Icon className="w-12 h-12 md:w-16 md:h-16 opacity-90 group-hover:scale-110 transition-transform" />
+                      <div className="absolute top-2 right-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1">
+                        <span className="text-white text-xs font-medium">{category.subcategories?.length || 0}</span>
+                      </div>
                     </div>
-                    <h3 className="text-white font-semibold text-lg mb-2 group-hover:text-orange-500 transition-colors">
-                      {category.name}
-                    </h3>
-                    <p className="text-gray-400 text-sm mb-4">
-                      {category.description}
-                    </p>
-                    <div className="flex items-center gap-2 text-gray-500 text-sm">
-                      <span>{category.subcategories?.length || 0} subcategories • {itemCount} parts</span>
-                      <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    
+                    {/* Text Section */}
+                    <div className="p-3 md:p-4">
+                      <h3 className="text-white font-bold text-sm md:text-base mb-1 group-hover:text-orange-500 transition-colors line-clamp-2">
+                        {category.name}
+                      </h3>
+                      <p className="text-gray-500 text-xs mb-2 line-clamp-2">
+                        {category.description}
+                      </p>
+                      <div className="flex items-center justify-between text-gray-400 text-xs">
+                        <span>{itemCount} parts</span>
+                        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 group-hover:text-orange-500 transition-all" />
+                      </div>
                     </div>
                   </button>
                 );
@@ -388,21 +396,19 @@ export default function PartsCatalog() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {selectedCategory.subcategories?.map((subcategory) => (
                 <button
                   key={subcategory.id}
                   onClick={() => handleSubcategoryClick(subcategory)}
-                  className="bg-[#1a1a1a] border border-[#333] rounded-xl p-5 text-left hover:border-orange-500 transition-all group"
+                  className="bg-[#1a1a1a] border-2 border-[#333] rounded-lg p-4 text-left hover:border-orange-500 hover:bg-[#222] transition-all group"
                 >
+                  <h3 className="text-white font-bold mb-1 group-hover:text-orange-500 transition-colors text-sm md:text-base">
+                    {subcategory.name}
+                  </h3>
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-white font-semibold mb-1 group-hover:text-orange-500 transition-colors">
-                        {subcategory.name}
-                      </h3>
-                      <p className="text-gray-500 text-sm">{subcategory.parts.length} parts available</p>
-                    </div>
-                    <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
+                    <p className="text-gray-500 text-xs">{subcategory.parts.length} parts</p>
+                    <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
                   </div>
                 </button>
               ))}
@@ -426,25 +432,23 @@ export default function PartsCatalog() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {selectedSubcategory.parts.map((part, index) => (
                 <button
                   key={index}
                   onClick={() => handlePartSearch(part)}
                   disabled={loading}
-                  className="bg-[#1a1a1a] border border-[#333] rounded-xl p-5 text-left hover:border-orange-500 transition-all group disabled:opacity-50"
+                  className="bg-[#1a1a1a] border-2 border-[#333] rounded-lg p-4 text-left hover:border-orange-500 hover:bg-[#222] transition-all group disabled:opacity-50"
                 >
+                  <h3 className="text-white font-semibold mb-1 group-hover:text-orange-500 transition-colors text-sm">
+                    {part}
+                  </h3>
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-white font-medium mb-1 group-hover:text-orange-500 transition-colors">
-                        {part}
-                      </h3>
-                      <p className="text-gray-500 text-sm">View {partType === 'oem' ? 'OEM' : 'aftermarket'} options</p>
-                    </div>
+                    <p className="text-gray-500 text-xs">View options</p>
                     {loading ? (
-                      <Loader2 className="w-5 h-5 text-gray-500 animate-spin" />
+                      <Loader2 className="w-4 h-4 text-gray-500 animate-spin" />
                     ) : (
-                      <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
+                      <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
                     )}
                   </div>
                 </button>
