@@ -38,16 +38,19 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-            <div className="bg-[#e31e24] p-2 rounded-lg">
-              <Wrench className="w-6 h-6 text-white" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-white font-bold text-xl tracking-tight">Part Pulse</span>
-              <span className="text-[#e31e24] text-xs font-semibold -mt-1">AI</span>
+          <Link to={createPageUrl('Home')} className="flex items-center gap-3">
+            <div className="relative">
+              <div className="bg-gradient-to-br from-slate-500 to-slate-600 p-2.5 rounded-xl shadow-lg">
+                <Wrench className="w-6 h-6 text-white" />
               </div>
-              </Link>
-              <span className="hidden sm:block text-gray-500 text-xs ml-2">OEM Parts + Pro Instructions in Seconds</span>
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-orange-500 rounded-full border-2 border-[#111]"></div>
+            </div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-slate-200 font-bold text-xl tracking-tight">Mechanic</span>
+              <span className="text-orange-500 font-bold text-xl">HQ</span>
+            </div>
+          </Link>
+          <span className="hidden sm:block text-gray-500 text-xs ml-3">OEM Parts + Pro Instructions in Seconds</span>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1">
@@ -89,7 +92,7 @@ export default function Header() {
                     onClick={() => setOpen(false)}
                     className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-[#222] rounded-lg transition-all duration-200"
                   >
-                    <item.icon className="w-5 h-5 text-[#e31e24]" />
+                    <item.icon className="w-5 h-5 text-orange-500" />
                     <span className="font-medium">{item.name}</span>
                   </Link>
                 ))}
@@ -99,7 +102,7 @@ export default function Header() {
                   onClick={() => setDarkMode(!darkMode)}
                   className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-[#222] rounded-lg transition-all duration-200 mt-4 border-t border-[#333] pt-6"
                 >
-                  {darkMode ? <Sun className="w-5 h-5 text-[#e31e24]" /> : <Moon className="w-5 h-5 text-[#e31e24]" />}
+                  {darkMode ? <Sun className="w-5 h-5 text-orange-500" /> : <Moon className="w-5 h-5 text-orange-500" />}
                   <span className="font-medium">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
                 </button>
               </div>
@@ -108,8 +111,8 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Red accent line */}
-      <div className="h-1 bg-gradient-to-r from-[#e31e24] via-[#ff4444] to-[#e31e24]" />
+      {/* Orange accent line */}
+      <div className="h-1 bg-gradient-to-r from-orange-600 via-orange-500 to-orange-600" />
     </header>
   );
 }

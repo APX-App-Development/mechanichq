@@ -13,8 +13,14 @@ export default function Layout({ children }) {
     <div className={`min-h-screen flex flex-col transition-colors duration-300 ${darkMode ? 'bg-[#111]' : 'bg-gray-100'}`}>
       <style>{`
         :root {
-          --primary: #e31e24;
-          --primary-dark: #c91a1f;
+          --primary: #f97316;
+          --primary-dark: #ea580c;
+          --mechanic-orange: #f97316;
+          --mechanic-orange-light: #fb923c;
+          --mechanic-gray: #94a3b8;
+          --mechanic-silver: #cbd5e1;
+          --mechanic-charcoal: #1e293b;
+          --mechanic-dark: #0f172a;
         }
         
         .dark body, body {
@@ -27,14 +33,14 @@ export default function Layout({ children }) {
           height: 8px;
         }
         ::-webkit-scrollbar-track {
-          background: #1a1a1a;
+          background: #1e293b;
         }
         ::-webkit-scrollbar-thumb {
-          background: #444;
+          background: #475569;
           border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-          background: #555;
+          background: #64748b;
         }
         
         /* PWA status bar color */
@@ -67,10 +73,10 @@ export default function Layout({ children }) {
       <footer className={`border-t py-6 ${darkMode ? 'bg-[#0a0a0a] border-[#222]' : 'bg-gray-200 border-gray-300'}`}>
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>
-            © {new Date().getFullYear()} Part Pulse. Find genuine OEM parts instantly.
+            © {new Date().getFullYear()} MechanicHQ. Find genuine OEM parts instantly.
           </p>
           <p className={`text-xs mt-1 ${darkMode ? 'text-gray-600' : 'text-gray-500'}`}>
-            Powered by Claude AI • Not affiliated with any vehicle manufacturer
+            Powered by AI • Not affiliated with any vehicle manufacturer
           </p>
         </div>
       </footer>

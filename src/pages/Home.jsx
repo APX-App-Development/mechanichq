@@ -78,13 +78,13 @@ export default function Home() {
         <div className="relative z-10 w-full max-w-6xl mx-auto px-4 py-8">
           {/* Title */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 bg-[#e31e24]/10 border border-[#e31e24]/30 rounded-full px-4 py-1.5 mb-5">
-              <Zap className="w-4 h-4 text-[#e31e24]" />
-              <span className="text-[#e31e24] text-sm font-medium">Power For The DIY Mechanic</span>
+            <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 rounded-full px-4 py-1.5 mb-5">
+              <Zap className="w-4 h-4 text-orange-500" />
+              <span className="text-orange-500 text-sm font-medium">Power For The DIY Mechanic</span>
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
-              Find OEM Parts <span className="text-[#e31e24]">Instantly</span>
+              Find OEM Parts <span className="text-orange-500">Instantly</span>
             </h1>
             <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
               Get exact OEM part numbers, MSRP prices, supersession info, purchase links and install instructions — all in one search.
@@ -112,7 +112,7 @@ export default function Home() {
             <div className="bg-[#1a1a1a]/80 backdrop-blur border border-[#333] rounded-2xl p-5 max-w-4xl mx-auto">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <Car className="w-5 h-5 text-[#e31e24]" />
+                  <Car className="w-5 h-5 text-orange-500" />
                   <span className="text-white font-semibold">My Garage</span>
                   <Badge className="bg-[#222] text-gray-400 border-0 text-xs ml-1">
                     {vehicles.length} vehicle{vehicles.length !== 1 ? 's' : ''}
@@ -120,7 +120,7 @@ export default function Home() {
                 </div>
                 <Link 
                   to={createPageUrl('MyGarage')}
-                  className="text-[#e31e24] text-sm font-medium flex items-center gap-1 hover:underline"
+                  className="text-orange-500 text-sm font-medium flex items-center gap-1 hover:underline"
                 >
                   Manage Garage
                   <ArrowRight className="w-4 h-4" />
@@ -134,18 +134,18 @@ export default function Home() {
                     onClick={() => handleGarageVehicleSearch(vehicle)}
                     className="flex items-center gap-2 px-4 py-2.5 bg-[#222] hover:bg-[#333] border border-[#444] rounded-xl text-left transition-all group"
                   >
-                    <div className="w-8 h-8 bg-[#e31e24]/20 rounded-lg flex items-center justify-center">
-                      <Car className="w-4 h-4 text-[#e31e24]" />
+                    <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                      <Car className="w-4 h-4 text-orange-500" />
                     </div>
                     <div>
-                      <p className="text-white text-sm font-medium group-hover:text-[#e31e24] transition-colors">
+                      <p className="text-white text-sm font-medium group-hover:text-orange-500 transition-colors">
                         {vehicle.year} {vehicle.make} {vehicle.model}
                       </p>
                       {vehicle.nickname && (
                         <p className="text-gray-500 text-xs">{vehicle.nickname}</p>
                       )}
                     </div>
-                    <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-[#e31e24] ml-2" />
+                    <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-orange-500 ml-2" />
                   </button>
                 ))}
                 <Link
@@ -189,10 +189,10 @@ export default function Home() {
             {features.map((feature, index) => (
               <div 
                 key={index}
-                className="bg-[#1a1a1a] border border-[#333] rounded-2xl p-6 hover:border-[#e31e24]/50 transition-all duration-300 group"
+                className="bg-[#1a1a1a] border border-[#333] rounded-2xl p-6 hover:border-orange-500/50 transition-all duration-300 group"
               >
-                <div className="bg-[#e31e24]/10 w-14 h-14 rounded-xl flex items-center justify-center mb-5 group-hover:bg-[#e31e24]/20 transition-all">
-                  <feature.icon className="w-7 h-7 text-[#e31e24]" />
+                <div className="bg-orange-500/10 w-14 h-14 rounded-xl flex items-center justify-center mb-5 group-hover:bg-orange-500/20 transition-all">
+                  <feature.icon className="w-7 h-7 text-orange-500" />
                 </div>
                 <h3 className="text-white font-semibold text-lg mb-2">{feature.title}</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">{feature.description}</p>
