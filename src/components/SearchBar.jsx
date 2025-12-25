@@ -41,12 +41,12 @@ export default function SearchBar({ onSearch, isLoading, large = false }) {
               }
             }}
             placeholder={large 
-              ? `Describe what you need in plain English...\n\nExamples:\n• "Front brake pads and rotors for my 2019 Ford F-150 3.5L EcoBoost"\n• "I need spark plugs for a 2021 Toyota Camry 2.5L - what's the OEM part number?"\n• "Water pump replacement parts for 2018 Honda Accord"`
+              ? `Describe what you need...\n\nExamples:\n• "Front brake pads for 2019 Ford F-150"\n• "Spark plugs for 2021 Toyota Camry 2.5L"\n• "Water pump for 2018 Honda Accord"`
               : 'Search for parts...'
             }
             className={`w-full bg-[#1a1a1a] text-white placeholder-gray-500 border-2 border-[#333] rounded-2xl focus:ring-4 focus:ring-orange-500/30 focus:border-orange-500 resize-none transition-all duration-200 ${
               large 
-                ? 'min-h-[160px] pt-6 pb-20 px-5 text-lg leading-relaxed' 
+                ? 'min-h-[110px] pt-4 pb-16 px-4 text-sm leading-snug placeholder:text-xs' 
                 : 'h-12 py-3 pl-12 pr-4'
             }`}
           />
