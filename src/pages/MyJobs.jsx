@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Briefcase, Trash2, Loader2, Car, CheckCircle, Clock, Play, ChevronRight, DollarSign } from 'lucide-react';
+import { Briefcase, Trash2, Loader2, Car, CheckCircle, Clock, Play, ChevronRight, DollarSign, Sparkles, Plus, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 export default function MyJobs() {
+  const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [recommendations, setRecommendations] = useState({});
+  const [loadingRecs, setLoadingRecs] = useState({});
 
   useEffect(() => {
     loadJobs();
@@ -43,6 +48,54 @@ export default function MyJobs() {
     } catch (err) {
       toast.error('Failed to update job');
     }
+  };
+
+  const getRecommendations = async (job) => {
+    if (recommendations[job.id] || loadingRecs[job.id]) return;
+    
+    setLoadingRecs(prev => ({ ...prev, [job.id]: true }));
+    
+    try {
+      const partsList = job.parts?.map(p => p.part_name).join(', ') || '';
+      
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Based on this automotive repair job: "${job.name}" with these parts: ${partsList}
+        
+Recommend 3-5 related or commonly needed parts to complete this repair. Think about:
+- Tools that would be needed
+- Consumables like fluids, grease, cleaners
+- Complementary parts often replaced together
+- Safety items
+
+Return recommendations as a JSON array of parts with reasoning.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            recommendations: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  part_name: { type: "string" },
+                  reason: { type: "string" },
+                  priority: { type: "string", enum: ["essential", "recommended", "optional"] }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      setRecommendations(prev => ({ ...prev, [job.id]: result.recommendations || [] }));
+    } catch (err) {
+      console.error('Failed to get recommendations:', err);
+    }
+    
+    setLoadingRecs(prev => ({ ...prev, [job.id]: false }));
+  };
+
+  const handleSearchRecommendation = (partName) => {
+    navigate(createPageUrl('SearchResults') + `?q=${encodeURIComponent(partName)}`);
   };
 
   const statusColors = {
@@ -142,6 +195,62 @@ export default function MyJobs() {
                             ${job.estimated_cost?.toFixed(2) || '0.00'}
                           </span>
                         </div>
+                      </div>
+                    )}
+
+                    {/* AI Recommendations */}
+                    {job.parts && job.parts.length > 0 && (
+                      <div className="mb-4">
+                        {!recommendations[job.id] && !loadingRecs[job.id] ? (
+                          <Button
+                            onClick={() => getRecommendations(job)}
+                            variant="outline"
+                            className="w-full border-[#444] text-white hover:bg-[#222] hover:border-orange-500"
+                          >
+                            <Sparkles className="w-4 h-4 mr-2 text-orange-500" />
+                            Get AI Part Recommendations
+                          </Button>
+                        ) : loadingRecs[job.id] ? (
+                          <div className="bg-[#222] rounded-xl p-4 flex items-center justify-center">
+                            <Loader2 className="w-5 h-5 text-orange-500 animate-spin mr-2" />
+                            <span className="text-gray-400 text-sm">Analyzing parts list...</span>
+                          </div>
+                        ) : recommendations[job.id]?.length > 0 ? (
+                          <div className="bg-gradient-to-br from-orange-500/10 to-orange-500/5 border border-orange-500/30 rounded-xl p-4">
+                            <div className="flex items-center gap-2 mb-3">
+                              <Sparkles className="w-4 h-4 text-orange-500" />
+                              <span className="text-white font-medium text-sm">AI Recommended Parts</span>
+                            </div>
+                            <div className="space-y-2">
+                              {recommendations[job.id].map((rec, idx) => (
+                                <button
+                                  key={idx}
+                                  onClick={() => handleSearchRecommendation(rec.part_name)}
+                                  className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg p-3 text-left hover:border-orange-500 transition-all group"
+                                >
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        <p className="text-white text-sm font-medium group-hover:text-orange-500 transition-colors">
+                                          {rec.part_name}
+                                        </p>
+                                        <Badge className={`text-xs ${
+                                          rec.priority === 'essential' ? 'bg-red-500/20 text-red-400' :
+                                          rec.priority === 'recommended' ? 'bg-orange-500/20 text-orange-400' :
+                                          'bg-blue-500/20 text-blue-400'
+                                        }`}>
+                                          {rec.priority}
+                                        </Badge>
+                                      </div>
+                                      <p className="text-gray-400 text-xs">{rec.reason}</p>
+                                    </div>
+                                    <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-orange-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" />
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ) : null}
                       </div>
                     )}
 
