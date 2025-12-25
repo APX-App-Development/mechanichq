@@ -4,18 +4,21 @@ import { createPageUrl } from '@/utils';
 import { Search, Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export default function SearchBar({ onSearch, isLoading, large = false }) {
+export default function SearchBar({ onSearch, isLoading, large = false, showPartTypeToggle = false }) {
   const [query, setQuery] = useState('');
+  const [partType, setPartType] = useState('oem');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!query.trim()) return;
     
+    const searchQuery = showPartTypeToggle ? `${query} ${partType}` : query;
+    
     if (onSearch) {
-      onSearch(query);
+      onSearch(searchQuery);
     } else {
-      navigate(createPageUrl('SearchResults') + `?q=${encodeURIComponent(query)}`);
+      navigate(createPageUrl('SearchResults') + `?q=${encodeURIComponent(searchQuery)}`);
     }
   };
 
@@ -24,9 +27,38 @@ export default function SearchBar({ onSearch, isLoading, large = false }) {
       <div className={`relative ${large ? 'max-w-4xl' : 'max-w-2xl'} mx-auto`}>
         {/* AI Badge */}
         {large && (
-          <div className="absolute -top-3 left-4 z-10 flex items-center gap-1.5 bg-gradient-to-r from-orange-600 to-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
-            <Sparkles className="w-3 h-3" />
-            AI-Powered Search
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-1.5 bg-gradient-to-r from-orange-600 to-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
+              <Sparkles className="w-3 h-3" />
+              AI-Powered Search
+            </div>
+
+            {showPartTypeToggle && (
+              <div className="flex items-center bg-[#1a1a1a] border border-[#333] rounded-lg p-0.5">
+                <button
+                  type="button"
+                  onClick={() => setPartType('oem')}
+                  className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${
+                    partType === 'oem'
+                      ? 'bg-orange-500 text-white'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  OEM
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPartType('aftermarket')}
+                  className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${
+                    partType === 'aftermarket'
+                      ? 'bg-orange-500 text-white'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Aftermarket
+                </button>
+              </div>
+            )}
           </div>
         )}
         

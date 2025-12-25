@@ -93,7 +93,7 @@ export default function Home() {
 
           {/* Main Search */}
           <div className="mb-8">
-            <SearchBar onSearch={handleSearch} large />
+            <SearchBar onSearch={handleSearch} large showPartTypeToggle />
           </div>
 
           {/* Vehicle Selector */}

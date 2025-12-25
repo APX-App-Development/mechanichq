@@ -105,6 +105,7 @@ export default function PartsCatalog() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [partType, setPartType] = useState('oem'); // 'oem' or 'aftermarket'
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
@@ -112,7 +113,7 @@ export default function PartsCatalog() {
 
   const handlePartSearch = async (partName) => {
     setLoading(true);
-    navigate(createPageUrl('SearchResults') + `?q=${encodeURIComponent(partName)}`);
+    navigate(createPageUrl('SearchResults') + `?q=${encodeURIComponent(partName + (partType === 'aftermarket' ? ' aftermarket' : ' OEM'))}`);
   };
 
   const handleQuickSearch = () => {
@@ -136,13 +137,42 @@ export default function PartsCatalog() {
           <div className="text-center mb-6">
             <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 rounded-full px-4 py-1.5 mb-4">
               <Sparkles className="w-4 h-4 text-orange-500" />
-              <span className="text-orange-500 text-sm font-medium">OEM Parts Catalog</span>
+              <span className="text-orange-500 text-sm font-medium">{partType === 'oem' ? 'OEM' : 'Aftermarket'} Parts Catalog</span>
             </div>
+            
+            {/* OEM/Aftermarket Toggle */}
+            <div className="flex items-center justify-center gap-2 mb-6">
+              <div className="flex items-center bg-[#1a1a1a] border border-[#333] rounded-lg p-1">
+                <button
+                  onClick={() => setPartType('oem')}
+                  className={`px-5 py-2 rounded-md text-sm font-medium transition-all ${
+                    partType === 'oem'
+                      ? 'bg-orange-500 text-white shadow-lg'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  OEM Parts
+                </button>
+                <button
+                  onClick={() => setPartType('aftermarket')}
+                  className={`px-5 py-2 rounded-md text-sm font-medium transition-all ${
+                    partType === 'aftermarket'
+                      ? 'bg-orange-500 text-white shadow-lg'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Aftermarket Parts
+                </button>
+              </div>
+            </div>
+
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
-              Browse Parts by Category
+              Browse {partType === 'oem' ? 'OEM' : 'Aftermarket'} Parts by Category
             </h1>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Explore genuine OEM parts organized by system. Find exactly what you need for your vehicle.
+              {partType === 'oem' 
+                ? 'Explore genuine OEM parts organized by system. Find exactly what you need for your vehicle.'
+                : 'Browse quality aftermarket parts from trusted brands. Great value with reliable performance.'}
             </p>
           </div>
 
@@ -171,7 +201,7 @@ export default function PartsCatalog() {
                 {filteredCategories.length} {filteredCategories.length === 1 ? 'Category' : 'Categories'}
               </h2>
               <Badge className="bg-green-500/20 text-green-400 border-0">
-                ✓ All OEM Parts
+                ✓ All {partType === 'oem' ? 'OEM' : 'Aftermarket'} Parts
               </Badge>
             </div>
 
@@ -238,7 +268,7 @@ export default function PartsCatalog() {
                       <h3 className="text-white font-medium mb-1 group-hover:text-orange-500 transition-colors">
                         {part}
                       </h3>
-                      <p className="text-gray-500 text-sm">View OEM options</p>
+                      <p className="text-gray-500 text-sm">View {partType === 'oem' ? 'OEM' : 'aftermarket'} options</p>
                     </div>
                     {loading ? (
                       <Loader2 className="w-5 h-5 text-gray-500 animate-spin" />

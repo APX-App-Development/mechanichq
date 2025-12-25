@@ -30,6 +30,7 @@ export default function SearchResults() {
   const [jobName, setJobName] = useState('');
   const [savingJob, setSavingJob] = useState(false);
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const [partType, setPartType] = useState('oem'); // 'oem' or 'aftermarket'
 
   // Offline mode - cache searches
   useEffect(() => {
@@ -58,7 +59,7 @@ export default function SearchResults() {
     ? `${year} ${make} ${model}${engine ? ` ${engine}` : ''}`
     : query;
 
-  const searchParts = async (searchQuery) => {
+  const searchParts = async (searchQuery, type = partType) => {
     setLoading(true);
     setError(null);
     setQuery(searchQuery);
@@ -79,12 +80,20 @@ export default function SearchResults() {
     }
     
     try {
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are an expert automotive parts specialist with access to OEM parts catalogs from ACDelco, Mopar, Toyota/Lexus, Honda/Acura, Ford/Motorcraft, Nissan, BMW, and other manufacturers.
+        const prompt = type === 'oem' 
+          ? `You are an expert automotive parts specialist with access to OEM parts catalogs from ACDelco, Mopar, Toyota/Lexus, Honda/Acura, Ford/Motorcraft, Nissan, BMW, and other manufacturers.
 
-SEARCH REQUEST: "${searchQuery}"
+    SEARCH REQUEST: "${searchQuery}"
 
-Search the real OEM catalogs and provide accurate, genuine part information.
+    Search the real OEM catalogs and provide accurate, genuine part information.`
+          : `You are an expert automotive parts specialist with access to AFTERMARKET parts catalogs from top brands like Bosch, Denso, NGK, Monroe, KYB, Moog, Timken, Gates, Dayco, Wagner, Centric, EBC, Hawk Performance, and more.
+
+    SEARCH REQUEST: "${searchQuery}"
+
+    Search aftermarket parts catalogs and provide high-quality aftermarket alternatives. Focus on trusted brands with good warranties and performance.`;
+
+        const response = await base44.integrations.Core.InvokeLLM({
+          prompt: prompt + `
 
 Return a JSON object with this structure:
 {
@@ -95,8 +104,8 @@ Return a JSON object with this structure:
       "msrp_price": 49.99,
       "description": "Detailed description",
       "category": "Category (Brakes, Engine, Filters, etc.)",
-      "manufacturer": "OEM Brand (Motorcraft, ACDelco, Toyota Genuine, etc.)",
-      "is_genuine_oem": true,
+      "manufacturer": "${type === 'oem' ? 'OEM Brand (Motorcraft, ACDelco, Toyota Genuine, etc.)' : 'Aftermarket Brand (Bosch, Denso, NGK, Monroe, etc.)'}",
+      "is_genuine_oem": ${type === 'oem' ? 'true' : 'false'},
       "fitment_note": "Any specific fitment notes",
       "supersession": {
         "new_part_number": "New part number if superseded",
@@ -132,8 +141,9 @@ Return a JSON object with this structure:
 }
 
 IMPORTANT:
-- Use REAL OEM part numbers
-- Include accurate MSRP prices
+- Use REAL ${type === 'oem' ? 'OEM' : 'AFTERMARKET'} part numbers
+- Include accurate ${type === 'oem' ? 'MSRP' : 'retail'} prices
+- ${type === 'aftermarket' ? 'Mention brand reputation and warranty info' : 'Emphasize genuine OEM quality'}
 - Provide detailed installation steps with specific measurements
 - Include torque specifications in both ft-lbs and Nm
 - List all required tools
@@ -219,9 +229,16 @@ IMPORTANT:
 
   useEffect(() => {
     if (initialQuery) {
-      searchParts(initialQuery);
+      searchParts(initialQuery, partType);
     }
   }, []);
+
+  const handlePartTypeToggle = (newType) => {
+    setPartType(newType);
+    if (query) {
+      searchParts(query, newType);
+    }
+  };
 
   const handleNewSearch = (newQuery) => {
     window.history.pushState({}, '', createPageUrl('SearchResults') + `?q=${encodeURIComponent(newQuery)}`);
@@ -302,22 +319,48 @@ IMPORTANT:
           
           <SearchBar onSearch={handleNewSearch} isLoading={loading} />
           
-          <div className="flex items-center gap-2 mt-4 flex-wrap">
-            {isOffline && (
-              <Badge className="bg-amber-500/20 text-amber-400 border-0">
-                <WifiOff className="w-3 h-3 mr-1" />
-                Offline Mode
-              </Badge>
-            )}
-            {vehicleInfo && (
-              <>
-                <Car className="w-4 h-4 text-orange-500" />
-                <span className="text-gray-400 text-sm">Results for:</span>
-                <Badge className="bg-[#1a1a1a] text-white border border-[#333]">
-                  {vehicleInfo}
+          <div className="flex items-center justify-between gap-4 mt-4 flex-wrap">
+            <div className="flex items-center gap-2 flex-wrap">
+              {isOffline && (
+                <Badge className="bg-amber-500/20 text-amber-400 border-0">
+                  <WifiOff className="w-3 h-3 mr-1" />
+                  Offline Mode
                 </Badge>
-              </>
-            )}
+              )}
+              {vehicleInfo && (
+                <>
+                  <Car className="w-4 h-4 text-orange-500" />
+                  <span className="text-gray-400 text-sm">Results for:</span>
+                  <Badge className="bg-[#1a1a1a] text-white border border-[#333]">
+                    {vehicleInfo}
+                  </Badge>
+                </>
+              )}
+            </div>
+
+            {/* OEM/Aftermarket Toggle */}
+            <div className="flex items-center bg-[#1a1a1a] border border-[#333] rounded-lg p-1">
+              <button
+                onClick={() => handlePartTypeToggle('oem')}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+                  partType === 'oem'
+                    ? 'bg-orange-500 text-white shadow-lg'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                OEM Parts
+              </button>
+              <button
+                onClick={() => handlePartTypeToggle('aftermarket')}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+                  partType === 'aftermarket'
+                    ? 'bg-orange-500 text-white shadow-lg'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                Aftermarket
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -360,7 +403,7 @@ IMPORTANT:
                   {results.length} OEM Parts Found
                 </h2>
                 <Badge className="bg-green-500/20 text-green-400 border-0 mt-1">
-                  ✓ Live catalog search
+                  ✓ {partType === 'oem' ? 'OEM' : 'Aftermarket'} catalog search
                 </Badge>
               </div>
               <div className="flex gap-2">
