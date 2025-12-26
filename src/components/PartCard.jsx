@@ -30,6 +30,7 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart, d
   const [newTip, setNewTip] = useState('');
   const [tips, setTips] = useState(part.pro_tips || []);
   const [submittingTip, setSubmittingTip] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(0);
 
   const handleSave = async () => {
     setSaving(true);
@@ -90,6 +91,33 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart, d
   return (
     <Card className="bg-[#1a1a1a] border-[#333] overflow-hidden card-hover rounded-2xl">
       <CardContent className="p-0">
+        {/* Product Images */}
+        {part.images && part.images.length > 0 && (
+          <div className="relative bg-[#222] aspect-square">
+            <img 
+              src={part.images[selectedImage]}
+              alt={part.part_name}
+              className="w-full h-full object-contain"
+              onError={(e) => {
+                e.target.src = 'https://via.placeholder.com/400x400?text=No+Image';
+              }}
+            />
+            {part.images.length > 1 && (
+              <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+                {part.images.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedImage(idx)}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      selectedImage === idx ? 'bg-orange-500 w-4' : 'bg-gray-600'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Main Part Info Card */}
         <div className="p-5">
           {/* Category & OEM Badge */}
@@ -134,7 +162,25 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart, d
             )}
           </div>
 
-          <p className="text-gray-400 text-sm mb-5">{part.description}</p>
+          <p className="text-gray-400 text-sm mb-4">{part.description}</p>
+
+          {/* Specifications */}
+          {part.specifications && Object.keys(part.specifications).length > 0 && (
+            <div className="bg-[#222] rounded-xl p-3 mb-4 space-y-1">
+              {part.specifications.weight && (
+                <p className="text-gray-300 text-xs"><span className="text-gray-500">Weight:</span> {part.specifications.weight}</p>
+              )}
+              {part.specifications.dimensions && (
+                <p className="text-gray-300 text-xs"><span className="text-gray-500">Dimensions:</span> {part.specifications.dimensions}</p>
+              )}
+              {part.specifications.material && (
+                <p className="text-gray-300 text-xs"><span className="text-gray-500">Material:</span> {part.specifications.material}</p>
+              )}
+              {part.specifications.warranty && (
+                <p className="text-gray-300 text-xs"><span className="text-gray-500">Warranty:</span> {part.specifications.warranty}</p>
+              )}
+            </div>
+          )}
 
           {/* Supersession Warning */}
           {part.supersession && part.supersession.new_part_number && (
@@ -158,32 +204,56 @@ export default function PartCard({ part, vehicleInfo, onAddToJob, onAddToCart, d
               </p>
               <div className="grid gap-2">
                 {part.purchase_links.map((link, idx) => (
-                  <a
-                    key={idx}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
-                      link.price === lowestPrice 
-                        ? 'bg-green-500/10 border-green-500/30 hover:border-green-500/50' 
-                        : 'bg-[#222] border-[#444] hover:border-[#555]'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-white font-medium">{link.store}</span>
-                      {link.price === lowestPrice && (
-                        <Badge className="bg-green-500/20 text-green-400 border-0 text-xs">
-                          Lowest
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className={`font-bold text-lg ${link.price === lowestPrice ? 'text-green-400' : 'text-white'}`}>
-                        ${link.price?.toFixed(2) || 'Check'}
-                      </span>
-                      <ExternalLink className="w-4 h-4 text-gray-500" />
-                    </div>
-                  </a>
+                 <a
+                   key={idx}
+                   href={link.url}
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   onClick={() => {
+                     // Track affiliate click
+                     const click = {
+                       timestamp: new Date().toISOString(),
+                       store: link.store,
+                       part: part.part_name,
+                       price: link.price
+                     };
+                     const clicks = JSON.parse(localStorage.getItem('affiliateClicks') || '[]');
+                     clicks.push(click);
+                     localStorage.setItem('affiliateClicks', JSON.stringify(clicks.slice(-100)));
+                   }}
+                   className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
+                     link.price === lowestPrice 
+                       ? 'bg-green-500/10 border-green-500/30 hover:border-green-500/50' 
+                       : 'bg-[#222] border-[#444] hover:border-[#555]'
+                   }`}
+                 >
+                   <div className="flex flex-col gap-1">
+                     <div className="flex items-center gap-2">
+                       <span className="text-white font-medium">{link.store}</span>
+                       {link.price === lowestPrice && (
+                         <Badge className="bg-green-500/20 text-green-400 border-0 text-xs">
+                           Lowest
+                         </Badge>
+                       )}
+                       {link.has_affiliate && (
+                         <Badge className="bg-blue-500/20 text-blue-400 border-0 text-xs">
+                           ⭐ Partner
+                         </Badge>
+                       )}
+                     </div>
+                     {link.availability && (
+                       <span className={`text-xs ${link.availability === 'In Stock' ? 'text-green-400' : 'text-amber-400'}`}>
+                         {link.availability} {link.shipping && `• ${link.shipping}`}
+                       </span>
+                     )}
+                   </div>
+                   <div className="flex items-center gap-2">
+                     <span className={`font-bold text-lg ${link.price === lowestPrice ? 'text-green-400' : 'text-white'}`}>
+                       ${link.price?.toFixed(2) || 'Check'}
+                     </span>
+                     <ExternalLink className="w-4 h-4 text-gray-500" />
+                   </div>
+                 </a>
                 ))}
               </div>
             </div>
