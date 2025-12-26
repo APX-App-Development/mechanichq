@@ -132,7 +132,7 @@ export default function ProductCard({ product, onViewDetails, onSave, viewMode =
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-3">
         {/* Brand */}
         <p className="text-orange-500 text-sm font-semibold mb-1">{product.brand}</p>
         
