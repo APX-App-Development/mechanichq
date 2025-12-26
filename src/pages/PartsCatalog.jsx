@@ -61,7 +61,20 @@ export default function PartsCatalog() {
     setLoading(true);
     try {
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate 8 featured automotive products for an e-commerce store. Mix of popular items like brake pads, air filters, spark plugs, LED headlights, floor mats, etc. Return realistic products with multiple retailer pricing.`,
+        prompt: `WEB SCRAPE 8 bestselling automotive products from real retailer websites (Amazon, AutoZone, RockAuto).
+
+SCRAPING REQUIREMENTS:
+1. Extract REAL product images from retailer CDNs (actual jpg/png URLs)
+2. Get ACTUAL product page links (direct buy URLs)
+3. Pull LIVE pricing from retailer sites
+4. Include popular items: brake pads, air filters, LED headlights, floor mats, oil filters, spark plugs
+5. Get real product photos from retailer image servers
+6. Extract actual ratings and review counts
+
+IMAGE FORMAT: Return real URLs like:
+- https://m.media-amazon.com/images/I/product123.jpg
+- https://cdn.autozone.com/images/products/product456.jpg
+- NOT placeholder or generic stock images`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -77,10 +90,22 @@ export default function PartsCatalog() {
                   originalPrice: { type: "number" },
                   retailer: { type: "string" },
                   image: { type: "string" },
+                  images: { type: "array", items: { type: "string" } },
                   rating: { type: "number" },
                   reviews: { type: "number" },
                   inStock: { type: "boolean" },
-                  buyUrl: { type: "string" }
+                  buyUrl: { type: "string" },
+                  priceComparison: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        retailer: { type: "string" },
+                        price: { type: "number" },
+                        buyUrl: { type: "string" }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -135,7 +160,23 @@ export default function PartsCatalog() {
         : 'universal';
 
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Find 16 ${category.name} products for ${vehicleInfo}. Include multiple retailer prices for each product (RockAuto, AutoZone, Amazon, etc). Mark exact fit when applicable.`,
+        prompt: `ACTIVELY SCRAPE real ${category.name} products from automotive retailer websites for ${vehicleInfo}.
+
+WEB SCRAPING INSTRUCTIONS:
+1. Visit actual retailer product pages (Amazon, AutoZone, RockAuto, CARiD, etc.)
+2. Extract REAL product images from their CDN/image servers
+3. Get ACTUAL product page URLs (direct links to buy)
+4. Pull LIVE pricing and stock status
+5. Include multiple retailer price comparisons
+6. Extract complete product details and specs
+7. Get 2-4 actual product photos per item from retailer sites
+
+IMAGE EXTRACTION:
+- Extract real image URLs like: https://m.media-amazon.com/images/I/71ABC123.jpg
+- Get multiple angles from retailer product galleries
+- Use actual product photos, not placeholder images
+
+Return 16 products with complete real data from actual retailer websites.`,
         response_json_schema: {
           type: "object",
           properties: {
