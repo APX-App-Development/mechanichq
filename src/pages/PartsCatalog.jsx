@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/select';
 import ProductCard from '@/components/catalog/ProductCard';
 import ProductDetail from '@/components/catalog/ProductDetail';
-import { vehicleYears, vehicleMakes, vehicleModels, vehicleEngines } from './catalog/VehicleData';
+import { vehicleYears, vehicleMakes, vehicleModels, vehicleEngines } from '@/components/catalog/VehicleData';
 import { toast } from 'sonner';
 
 export default function PartsCatalog() {
