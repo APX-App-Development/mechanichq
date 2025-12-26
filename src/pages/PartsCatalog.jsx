@@ -160,22 +160,23 @@ export default function PartsCatalog() {
       const categoryName = category ? categories.find(c => c.id === category)?.name : 'automotive parts';
       
       const prompt = `You are an expert automotive parts specialist with access to the following major retailers:
+- RockAuto.com (best prices, huge inventory)
+- FCP Euro (lifetime warranty, premium parts)
+- Summit Racing (performance parts specialist)
 - AmericanMuscle.com
 - AmericanTrucks.com  
-- CustomWheelOffset.com
 - AdvanceAutoParts.com
 - AutoZone.com
 - CarParts.com
 - CARiD.com
 - Amazon.com
 - eBay.com
-- eBayMotors.com
 
 Search for: "${query || categoryName}"
 Vehicle: ${vehicleInfo}
 Category: ${categoryName}
 
-Find 12 real products from these retailers. For each product provide:
+Find 12 real products. CRITICAL: For EACH product, provide MULTIPLE retailer options with different prices so users can compare. Each product should have 3-5 price options from different retailers.
 - Realistic product names
 - Accurate pricing ($20-$2000 range)
 - Proper brand names (Bosch, Denso, ACDelco, Motorcraft, etc.)
@@ -193,8 +194,7 @@ Return a JSON object with this structure:
       "name": "Product name",
       "brand": "Brand name",
       "price": 99.99,
-      "originalPrice": 129.99,
-      "retailer": "AutoZone",
+      "retailer": "RockAuto",
       "image": "https://images.unsplash.com/photo-...",
       "images": ["url1", "url2", "url3"],
       "rating": 4.5,
@@ -207,7 +207,32 @@ Return a JSON object with this structure:
         "Weight": "5 lbs"
       },
       "compatibility": "Fits 2015-2020 Ford F-150",
-      "buyUrl": "https://www.autozone.com/..."
+      "buyUrl": "https://www.rockauto.com/...",
+      "priceComparison": [
+        {
+          "retailer": "RockAuto",
+          "price": 89.99,
+          "originalPrice": 109.99,
+          "shipping": "Free shipping on $99+",
+          "inStock": true,
+          "buyUrl": "https://www.rockauto.com/..."
+        },
+        {
+          "retailer": "FCP Euro",
+          "price": 94.99,
+          "shipping": "Free shipping",
+          "inStock": true,
+          "buyUrl": "https://www.fcpeuro.com/..."
+        },
+        {
+          "retailer": "AutoZone",
+          "price": 99.99,
+          "originalPrice": 129.99,
+          "shipping": "Free next-day on $35+",
+          "inStock": true,
+          "buyUrl": "https://www.autozone.com/..."
+        }
+      ]
     }
   ]
 }`;
@@ -237,7 +262,21 @@ Return a JSON object with this structure:
                   description: { type: "string" },
                   specs: { type: "object" },
                   compatibility: { type: "string" },
-                  buyUrl: { type: "string" }
+                  buyUrl: { type: "string" },
+                  priceComparison: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        retailer: { type: "string" },
+                        price: { type: "number" },
+                        originalPrice: { type: "number" },
+                        shipping: { type: "string" },
+                        inStock: { type: "boolean" },
+                        buyUrl: { type: "string" }
+                      }
+                    }
+                  }
                 }
               }
             }

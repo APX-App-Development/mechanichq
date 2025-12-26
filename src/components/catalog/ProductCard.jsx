@@ -1,8 +1,9 @@
 import React from 'react';
-import { ShoppingCart, Heart, ExternalLink, CheckCircle, AlertCircle } from 'lucide-react';
+import { ShoppingCart, Heart, ExternalLink, CheckCircle, AlertCircle, TrendingDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
+import { retailerData } from './RetailerInfo';
 
 export default function ProductCard({ product, onViewDetails, onSave }) {
   const handleSave = () => {
@@ -10,12 +11,12 @@ export default function ProductCard({ product, onViewDetails, onSave }) {
     toast.success('Saved to your parts list!');
   };
 
-  const retailerLogos = {
-    'AmericanMuscle': 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=100&h=50&fit=crop',
-    'AutoZone': 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=100&h=50&fit=crop',
-    'Amazon': 'https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?w=100&h=50&fit=crop',
-    'eBay': 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=100&h=50&fit=crop',
-  };
+  const lowestPrice = product.priceComparison && product.priceComparison.length > 0
+    ? Math.min(...product.priceComparison.map(p => p.price))
+    : product.price;
+  
+  const priceOptions = product.priceComparison?.length || 1;
+  const hasBetterPrice = product.priceComparison && product.priceComparison.some(p => p.price < product.price);
 
   return (
     <div className="bg-[#1a1a1a] border border-[#333] rounded-xl overflow-hidden hover:border-orange-500 transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/10 group">
@@ -82,25 +83,20 @@ export default function ProductCard({ product, onViewDetails, onSave }) {
           </div>
         )}
 
-        {/* Price & Retailer */}
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <p className="text-white font-bold text-xl">${product.price.toFixed(2)}</p>
-            {product.originalPrice && (
-              <p className="text-gray-500 text-sm line-through">${product.originalPrice.toFixed(2)}</p>
+        {/* Price & Retailers */}
+        <div className="mb-3">
+          <div className="flex items-baseline gap-2 mb-1">
+            <p className="text-white font-bold text-xl">${lowestPrice.toFixed(2)}</p>
+            {hasBetterPrice && (
+              <Badge className="bg-green-500/20 text-green-400 border-0 text-xs">
+                <TrendingDown className="w-3 h-3 mr-1" />
+                Best Price
+              </Badge>
             )}
           </div>
-          <div className="text-right">
-            <p className="text-gray-400 text-xs mb-1">from</p>
-            <div className="flex items-center gap-1">
-              <img 
-                src={retailerLogos[product.retailer] || retailerLogos['Amazon']}
-                alt={product.retailer}
-                className="h-4 w-auto opacity-60"
-              />
-              <p className="text-gray-300 text-xs font-medium">{product.retailer}</p>
-            </div>
-          </div>
+          <p className="text-gray-400 text-xs">
+            {priceOptions} price option{priceOptions !== 1 ? 's' : ''} available
+          </p>
         </div>
 
         {/* Actions */}

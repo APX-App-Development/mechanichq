@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   X, 
   ShoppingCart, 
@@ -13,9 +14,13 @@ import {
   Shield,
   ExternalLink,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  DollarSign,
+  Store
 } from 'lucide-react';
 import { toast } from 'sonner';
+import PriceComparison from './PriceComparison';
+import RetailerInfo from './RetailerInfo';
 
 export default function ProductDetail({ product, open, onOpenChange, onSave }) {
   const [currentImage, setCurrentImage] = useState(0);
@@ -180,19 +185,55 @@ export default function ProductDetail({ product, open, onOpenChange, onSave }) {
               </div>
             )}
 
-            {/* Features */}
-            <div className="mb-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex items-center gap-2 text-gray-400 text-sm">
-                  <Package className="w-4 h-4 text-orange-500" />
-                  <span>Free Shipping Available</span>
+            {/* Tabs for More Info */}
+            <Tabs defaultValue="details" className="mb-4">
+              <TabsList className="bg-[#222] w-full">
+                <TabsTrigger value="details" className="flex-1">
+                  <Package className="w-4 h-4 mr-2" />
+                  Details
+                </TabsTrigger>
+                <TabsTrigger value="pricing" className="flex-1">
+                  <DollarSign className="w-4 h-4 mr-2" />
+                  Pricing
+                </TabsTrigger>
+                <TabsTrigger value="retailer" className="flex-1">
+                  <Store className="w-4 h-4 mr-2" />
+                  Retailer
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="details" className="mt-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex items-center gap-2 text-gray-400 text-sm">
+                    <Package className="w-4 h-4 text-orange-500" />
+                    <span>Free Shipping Available</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-400 text-sm">
+                    <Shield className="w-4 h-4 text-orange-500" />
+                    <span>Warranty Included</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-gray-400 text-sm">
-                  <Shield className="w-4 h-4 text-orange-500" />
-                  <span>Warranty Included</span>
-                </div>
-              </div>
-            </div>
+              </TabsContent>
+
+              <TabsContent value="pricing" className="mt-4">
+                {product.priceComparison && product.priceComparison.length > 0 ? (
+                  <PriceComparison 
+                    prices={product.priceComparison}
+                    partName={product.name}
+                    partNumber={product.id}
+                    onSetAlert={() => onOpenChange(false)}
+                  />
+                ) : (
+                  <div className="text-center py-4 text-gray-400 text-sm">
+                    Only available from {product.retailer}
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="retailer" className="mt-4">
+                <RetailerInfo retailerName={product.retailer} />
+              </TabsContent>
+            </Tabs>
 
             {/* Actions */}
             <div className="mt-auto flex gap-2">
@@ -209,14 +250,14 @@ export default function ProductDetail({ product, open, onOpenChange, onSave }) {
                 className="flex-1 bg-orange-500 hover:bg-orange-600"
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
-                Buy Now at {product.retailer}
+                Buy Now
                 <ExternalLink className="w-4 h-4 ml-2" />
               </Button>
             </div>
 
             {/* Legal */}
             <p className="text-gray-500 text-xs mt-3">
-              Clicking "Buy Now" will redirect you to {product.retailer}. MechanicHQ is not responsible for pricing, availability, or transactions.
+              MechanicHQ aggregates pricing from multiple retailers. Clicking "Buy Now" redirects to the retailer's website. We are not responsible for pricing, availability, or transactions.
             </p>
           </div>
         </div>
