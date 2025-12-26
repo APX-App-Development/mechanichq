@@ -61,7 +61,16 @@ export default function PartsCatalog() {
     setLoading(true);
     try {
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate 8 featured automotive products for an e-commerce store. Mix of popular items like brake pads, air filters, spark plugs, LED headlights, floor mats, etc. Return realistic products with multiple retailer pricing.`,
+        prompt: `Search the web for 8 featured automotive products with REAL high-quality images.
+
+Find product photos from:
+- Unsplash automotive category
+- Real manufacturer websites
+- Automotive part retailers
+
+Use search terms: "brake pads product photo", "air filter automotive", "spark plugs professional photo", "LED headlights car", "floor mats vehicle"
+
+Return actual image URLs from photo sites and manufacturers.`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -100,6 +109,11 @@ export default function PartsCatalog() {
       const vehicle = { year, make, model, engine };
       setSelectedVehicle(vehicle);
       toast.success(`Vehicle set: ${year} ${make} ${model}`);
+      
+      // Refresh category results with new vehicle
+      if (selectedCategory) {
+        handleCategoryClick(selectedCategory);
+      }
     }
   };
 
@@ -135,7 +149,21 @@ export default function PartsCatalog() {
       'universal';
 
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Find 16 ${category.name} products for ${vehicleInfo}. Include multiple retailer prices for each product (RockAuto, AutoZone, Amazon, etc). Mark exact fit when applicable.`,
+        prompt: `Search the web for 16 real ${category.name} products that fit ${vehicleInfo}.
+
+For EACH product, find:
+- High-quality product images (search Unsplash, Pexels, or product manufacturer sites)
+- Use keywords like "automotive ${category.name} product photo" "car parts ${category.name}" 
+- Multiple angles/views per product if possible
+- Real pricing from retailers
+- Actual product names and part numbers
+
+Image URL examples:
+- https://images.unsplash.com/photo-[id]?w=500
+- https://cdn.shopify.com/s/files/1/[path].jpg
+- https://m.media-amazon.com/images/I/[id].jpg
+
+Prioritize HIGH-QUALITY, REAL automotive product photography.`,
         response_json_schema: {
           type: "object",
           properties: {
