@@ -375,84 +375,126 @@ export default function PartsCatalog() {
           </>
         ) : !selectedSubcategory ? (
           <>
-            {/* Subcategories View */}
-            <div className="mb-8">
-              <Button
-                onClick={handleBackToCategories}
-                variant="ghost"
-                className="text-gray-400 hover:text-white mb-4"
-              >
-                ← Back to Categories
-              </Button>
-              
-              <div className="flex items-center gap-4 mb-2">
-                <div className={`w-16 h-16 rounded-xl border ${colorClasses[selectedCategory.color]} flex items-center justify-center`}>
-                  {React.createElement(selectedCategory.icon, { className: 'w-8 h-8' })}
-                </div>
-                <div>
-                  <h2 className="text-white font-bold text-2xl">{selectedCategory.name}</h2>
-                  <p className="text-gray-400">{selectedCategory.description}</p>
+            {/* Subcategories View with Sidebar */}
+            <div className="flex flex-col lg:flex-row gap-6">
+              {/* Sidebar Navigation */}
+              <div className="lg:w-64 flex-shrink-0">
+                <div className="bg-[#1a1a1a] border border-[#333] rounded-xl p-4 sticky top-24">
+                  {/* Breadcrumbs */}
+                  <div className="flex items-center gap-2 text-sm mb-4 pb-4 border-b border-[#333]">
+                    <button onClick={handleBackToCategories} className="text-gray-400 hover:text-orange-500 transition-colors">
+                      <Home className="w-4 h-4" />
+                    </button>
+                    <ChevronRight className="w-3 h-3 text-gray-600" />
+                    <span className="text-white font-medium truncate">{selectedCategory.name}</span>
+                  </div>
+
+                  {/* Category Info */}
+                  <div className="mb-4">
+                    <div className={`w-12 h-12 rounded-lg border ${colorClasses[selectedCategory.color]} flex items-center justify-center mb-3`}>
+                      {React.createElement(selectedCategory.icon, { className: 'w-6 h-6' })}
+                    </div>
+                    <h2 className="text-white font-bold text-lg mb-1">{selectedCategory.name}</h2>
+                    <p className="text-gray-400 text-sm">{selectedCategory.description}</p>
+                  </div>
+
+                  {/* Quick Links */}
+                  <div className="space-y-1">
+                    <p className="text-gray-500 text-xs font-semibold uppercase mb-2">Quick Jump</p>
+                    {selectedCategory.subcategories?.slice(0, 8).map((subcategory) => (
+                      <button
+                        key={subcategory.id}
+                        onClick={() => handleSubcategoryClick(subcategory)}
+                        className="w-full text-left px-3 py-2 rounded-lg text-sm text-gray-400 hover:bg-[#222] hover:text-orange-500 transition-all"
+                      >
+                        {subcategory.name}
+                      </button>
+                    ))}
+                    {selectedCategory.subcategories?.length > 8 && (
+                      <p className="text-gray-600 text-xs px-3 py-2">
+                        +{selectedCategory.subcategories.length - 8} more below
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {selectedCategory.subcategories?.map((subcategory) => (
-                <button
-                  key={subcategory.id}
-                  onClick={() => handleSubcategoryClick(subcategory)}
-                  className="bg-[#1a1a1a] border-2 border-[#333] rounded-lg p-4 text-left hover:border-orange-500 hover:bg-[#222] transition-all group"
-                >
-                  <h3 className="text-white font-bold mb-1 group-hover:text-orange-500 transition-colors text-sm md:text-base">
-                    {subcategory.name}
+              {/* Main Content */}
+              <div className="flex-1">
+                <div className="mb-6">
+                  <h3 className="text-white font-semibold text-xl mb-2">
+                    Browse {selectedCategory.subcategories?.length} Subcategories
                   </h3>
-                  <div className="flex items-center justify-between">
-                    <p className="text-gray-500 text-xs">{subcategory.parts.length} parts</p>
-                    <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
-                  </div>
-                </button>
-              ))}
+                  <p className="text-gray-400 text-sm">Select a subcategory to view available parts</p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {selectedCategory.subcategories?.map((subcategory) => (
+                    <button
+                      key={subcategory.id}
+                      onClick={() => handleSubcategoryClick(subcategory)}
+                      className="bg-[#1a1a1a] border-2 border-[#333] rounded-lg p-4 text-left hover:border-orange-500 hover:bg-[#222] transition-all group"
+                    >
+                      <h3 className="text-white font-bold mb-1 group-hover:text-orange-500 transition-colors text-sm md:text-base">
+                        {subcategory.name}
+                      </h3>
+                      <div className="flex items-center justify-between">
+                        <p className="text-gray-500 text-xs">{subcategory.parts.length} parts</p>
+                        <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </>
         ) : (
           <>
-            {/* Parts List View */}
-            <div className="mb-8">
-              <Button
-                onClick={handleBackToSubcategories}
-                variant="ghost"
-                className="text-gray-400 hover:text-white mb-4"
-              >
-                ← Back to {selectedCategory.name}
-              </Button>
-              
-              <div className="mb-2">
-                <h2 className="text-white font-bold text-2xl">{selectedSubcategory.name}</h2>
-                <p className="text-gray-400">{selectedSubcategory.parts.length} parts in this category</p>
+            {/* Parts List View with Breadcrumbs */}
+            <div>
+              {/* Breadcrumb Navigation */}
+              <div className="bg-[#1a1a1a] border border-[#333] rounded-xl p-4 mb-6">
+                <div className="flex items-center gap-2 text-sm flex-wrap">
+                  <button onClick={handleBackToCategories} className="text-gray-400 hover:text-orange-500 transition-colors flex items-center gap-1">
+                    <Home className="w-4 h-4" />
+                    <span>All Categories</span>
+                  </button>
+                  <ChevronRight className="w-3 h-3 text-gray-600" />
+                  <button onClick={handleBackToSubcategories} className="text-gray-400 hover:text-orange-500 transition-colors">
+                    {selectedCategory.name}
+                  </button>
+                  <ChevronRight className="w-3 h-3 text-gray-600" />
+                  <span className="text-white font-medium">{selectedSubcategory.name}</span>
+                </div>
               </div>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {selectedSubcategory.parts.map((part, index) => (
-                <button
-                  key={index}
-                  onClick={() => handlePartSearch(part)}
-                  disabled={loading}
-                  className="bg-[#1a1a1a] border-2 border-[#333] rounded-lg p-4 text-left hover:border-orange-500 hover:bg-[#222] transition-all group disabled:opacity-50"
-                >
-                  <h3 className="text-white font-semibold mb-1 group-hover:text-orange-500 transition-colors text-sm">
-                    {part}
-                  </h3>
-                  <div className="flex items-center justify-between">
-                    <p className="text-gray-500 text-xs">View options</p>
-                    {loading ? (
-                      <Loader2 className="w-4 h-4 text-gray-500 animate-spin" />
-                    ) : (
-                      <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
-                    )}
-                  </div>
-                </button>
-              ))}
+              <div className="mb-6">
+                <h2 className="text-white font-bold text-2xl mb-2">{selectedSubcategory.name}</h2>
+                <p className="text-gray-400">{selectedSubcategory.parts.length} parts available • Click any part to search</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {selectedSubcategory.parts.map((part, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handlePartSearch(part)}
+                    disabled={loading}
+                    className="bg-[#1a1a1a] border-2 border-[#333] rounded-lg p-4 text-left hover:border-orange-500 hover:bg-[#222] transition-all group disabled:opacity-50"
+                  >
+                    <h3 className="text-white font-semibold mb-1 group-hover:text-orange-500 transition-colors text-sm">
+                      {part}
+                    </h3>
+                    <div className="flex items-center justify-between">
+                      <p className="text-gray-500 text-xs">View options</p>
+                      {loading ? (
+                        <Loader2 className="w-4 h-4 text-gray-500 animate-spin" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           </>
         )}
