@@ -135,17 +135,7 @@ export default function PartsCatalog() {
         : 'universal';
 
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Search the internet for REAL ${category.name} products available right now for ${vehicleInfo}. 
-
-CRITICAL INSTRUCTIONS:
-1. Find 16 actual products from real retailers (AmericanMuscle, AutoZone, Amazon, RockAuto, etc.)
-2. For each product, provide 3-5 HIGH QUALITY product images from the actual retailer websites
-3. Extract real product photos showing different angles: front, side, installed view, packaging
-4. Include genuine retailer product page URLs
-5. Get accurate current pricing and availability
-6. Mark which products are exact fit vs universal
-
-Use add_context_from_internet to scrape actual product listings and images.`,
+        prompt: `Find 16 ${category.name} products for ${vehicleInfo}. Include multiple retailer prices for each product (RockAuto, AutoZone, Amazon, etc). Mark exact fit when applicable.`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -297,23 +287,12 @@ Use add_context_from_internet to scrape actual product listings and images.`,
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <span className="text-sm font-medium">SELECT YOUR VEHICLE</span>
-            <div className="flex items-center gap-2 flex-1 max-w-4xl flex-wrap">
-              <Select value={year} onValueChange={setYear}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9 min-w-[100px]">
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent className="max-h-60">
-                  {vehicleYears.map((y) => (
-                    <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
+            <div className="flex items-center gap-2 flex-1 max-w-4xl">
               <Select value={make} onValueChange={(val) => { setMake(val); setModel(''); setEngine(''); }}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9 min-w-[120px]">
+                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9">
                   <SelectValue placeholder="Make" />
                 </SelectTrigger>
-                <SelectContent className="max-h-60">
+                <SelectContent>
                   {vehicleMakes.map((m) => (
                     <SelectItem key={m} value={m}>{m}</SelectItem>
                   ))}
@@ -321,21 +300,32 @@ Use add_context_from_internet to scrape actual product listings and images.`,
               </Select>
 
               <Select value={model} onValueChange={(val) => { setModel(val); setEngine(''); }} disabled={!make}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9 min-w-[120px]">
+                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9">
                   <SelectValue placeholder="Model" />
                 </SelectTrigger>
-                <SelectContent className="max-h-60">
+                <SelectContent>
                   {availableModels.map((m) => (
                     <SelectItem key={m} value={m}>{m}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              <Select value={engine} onValueChange={setEngine} disabled={!model}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9 min-w-[100px]">
-                  <SelectValue placeholder="Engine" />
+              <Select value={year} onValueChange={setYear}>
+                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9">
+                  <SelectValue placeholder="Year" />
                 </SelectTrigger>
-                <SelectContent className="max-h-60">
+                <SelectContent>
+                  {vehicleYears.map((y) => (
+                    <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={engine} onValueChange={setEngine} disabled={!model}>
+                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9">
+                  <SelectValue placeholder="Submodel" />
+                </SelectTrigger>
+                <SelectContent>
                   {availableEngines.map((e) => (
                     <SelectItem key={e} value={e}>{e}</SelectItem>
                   ))}
