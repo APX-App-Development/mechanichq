@@ -211,7 +211,8 @@ const colorClasses = {
   purple: 'bg-purple-500/10 border-purple-500/30 text-purple-500',
   green: 'bg-green-500/10 border-green-500/30 text-green-500',
   red: 'bg-red-500/10 border-red-500/30 text-red-500',
-  gray: 'bg-gray-500/10 border-gray-500/30 text-gray-500'
+  gray: 'bg-gray-500/10 border-gray-500/30 text-gray-500',
+  pink: 'bg-pink-500/10 border-pink-500/30 text-pink-500'
 };
 
 export default function PartsCatalog() {
@@ -351,7 +352,7 @@ export default function PartsCatalog() {
                     className="bg-[#1a1a1a] border-2 border-[#333] rounded-xl overflow-hidden text-left hover:border-orange-500 transition-all duration-200 group"
                   >
                     {/* Icon/Image Section */}
-                    <div className={`h-32 md:h-40 flex items-center justify-center bg-gradient-to-br ${colorClasses[category.color].replace('border-', 'from-')} to-[#1a1a1a] relative`}>
+                    <div className={`h-32 md:h-40 flex items-center justify-center bg-gradient-to-br ${colorClasses[category.color]?.replace('border-', 'from-') || 'from-gray-500/10'} to-[#1a1a1a] relative`}>
                       <Icon className="w-12 h-12 md:w-16 md:h-16 opacity-90 group-hover:scale-110 transition-transform" />
                       <div className="absolute top-2 right-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1">
                         <span className="text-white text-xs font-medium">{category.subcategories?.length || 0}</span>
