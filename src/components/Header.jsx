@@ -119,15 +119,27 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Theme Toggle */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setDarkMode(!darkMode)}
-            className="text-gray-400 hover:text-white hover:bg-[#222] hidden md:flex"
-          >
-            {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </Button>
+          {/* Theme Toggle & Dev Mode */}
+          <div className="hidden md:flex items-center gap-2">
+            {isDevMode && (
+              <Button
+                onClick={disableDevMode}
+                variant="outline"
+                size="sm"
+                className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+              >
+                Exit Dev
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setDarkMode(!darkMode)}
+              className="text-gray-400 hover:text-white hover:bg-[#222]"
+            >
+              {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </Button>
+          </div>
 
           {/* Mobile Menu */}
           <Sheet open={open} onOpenChange={setOpen}>
