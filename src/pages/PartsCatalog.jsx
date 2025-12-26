@@ -375,7 +375,7 @@ export default function PartsCatalog() {
               <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center text-4xl group-hover:bg-orange-50 transition-colors">
                 {cat.icon}
               </div>
-              <span className="bg-slate-50 text-slate-50 text-sm font-medium text-center group-hover:text-orange-600">
+              <span className="bg-transparent text-slate-50 text-sm font-medium text-center group-hover:text-orange-600">
                 {cat.name}
               </span>
             </button>
@@ -387,14 +387,14 @@ export default function PartsCatalog() {
       <div className="bg-slate-900 py-12">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Shop By Make</h2>
-            <button className="text-blue-600 hover:underline text-sm font-medium">View all</button>
+            <h2 className="text-slate-50 text-2xl font-bold">Shop By Make</h2>
+            <button className="text-orange-500 text-sm font-medium hover:underline">View all</button>
           </div>
           <div className="grid grid-cols-4 md:grid-cols-8 gap-6">
             {manufacturerLogos.map((mfg) =>
             <button
-              key={mfg.name}
-              className="bg-white p-4 rounded-lg hover:shadow-lg transition-shadow flex items-center justify-center">
+              key={mfg.name} className="bg-transparent p-4 rounded-lg hover:shadow-lg transition-shadow flex items-center justify-center">
+
 
                 <img src={mfg.logo} alt={mfg.name} className="w-full h-12 object-contain opacity-70 hover:opacity-100 transition-opacity" />
               </button>
