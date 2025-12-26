@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
+import { DevModeProvider } from '@/components/DevModeProvider';
 
 export default function Layout({ children }) {
   const [darkMode, setDarkMode] = useState(true);
@@ -10,6 +11,7 @@ export default function Layout({ children }) {
   }, []);
 
   return (
+    <DevModeProvider>
     <div className={`min-h-screen flex flex-col transition-colors duration-300 ${darkMode ? 'bg-[#111]' : 'bg-gray-100'}`}>
       <style>{`
         :root {
@@ -81,5 +83,6 @@ export default function Layout({ children }) {
         </div>
       </footer>
     </div>
+    </DevModeProvider>
   );
 }
