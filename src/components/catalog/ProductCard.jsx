@@ -97,9 +97,9 @@ export default function ProductCard({ product, onViewDetails, onSave, viewMode =
   }
 
   return (
-    <div className="bg-[#1a1a1a] border border-[#333] rounded-xl overflow-hidden hover:border-orange-500 transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/10 group">
+    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 group relative">
       {/* Image */}
-      <div className="aspect-square bg-[#222] relative overflow-hidden">
+      <div className="aspect-square bg-gray-50 relative overflow-hidden">
         <img 
           src={product.image}
           alt={product.name}
@@ -107,34 +107,28 @@ export default function ProductCard({ product, onViewDetails, onSave, viewMode =
           loading="lazy"
         />
         
-        {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-2">
-          {product.fitment === 'exact' && (
-            <Badge className="bg-green-500 text-white border-0">
-              <CheckCircle className="w-3 h-3 mr-1" />
-              Exact Fit
-            </Badge>
-          )}
-          {product.fitment === 'verify' && (
-            <Badge className="bg-amber-500 text-white border-0">
-              <AlertCircle className="w-3 h-3 mr-1" />
-              Verify Fit
-            </Badge>
-          )}
-          {product.isOEM && (
-            <Badge className="bg-blue-500 text-white border-0">
-              OEM
-            </Badge>
-          )}
-        </div>
+        {/* Discount Badge */}
+        {product.originalPrice && product.originalPrice > product.price && (
+          <div className="absolute top-2 left-2 bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">
+            {Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
+          </div>
+        )}
 
         {/* Save Button */}
         <button
           onClick={handleSave}
-          className="absolute top-3 right-3 w-10 h-10 bg-black/50 hover:bg-orange-500 rounded-full flex items-center justify-center backdrop-blur-sm transition-colors"
+          className="absolute top-2 right-2 w-9 h-9 bg-white hover:bg-orange-500 rounded-full flex items-center justify-center shadow-md transition-colors group/btn"
         >
-          <Heart className="w-5 h-5 text-white" />
+          <Heart className="w-4 h-4 text-gray-600 group-hover/btn:text-white" />
         </button>
+
+        {/* Fitment Badge */}
+        {product.fitment === 'exact' && (
+          <div className="absolute bottom-2 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-semibold flex items-center gap-1">
+            <CheckCircle className="w-3 h-3" />
+            Universal Fit
+          </div>
+        )}
       </div>
 
       {/* Content */}

@@ -2,23 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { 
   Search, 
-  SlidersHorizontal, 
-  Zap,
-  Wrench,
-  Package,
-  Gauge,
-  Sparkles,
-  Car,
-  Lightbulb,
-  Cog,
-  Radio,
-  Droplets,
-  Truck,
-  Shield,
+  ChevronRight,
   Loader2,
-  Grid3x3,
-  List,
-  TrendingDown,
+  ShoppingCart,
+  Heart,
+  TrendingUp,
+  Package,
+  CheckCircle,
   Star
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -31,29 +21,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import CategoryCard from '@/components/catalog/CategoryCard';
 import ProductCard from '@/components/catalog/ProductCard';
 import ProductDetail from '@/components/catalog/ProductDetail';
-import VehicleSelector from '@/components/catalog/VehicleSelector';
+import { vehicleYears, vehicleMakes, vehicleModels, vehicleEngines } from './catalog/VehicleData';
 import { toast } from 'sonner';
 
 export default function PartsCatalog() {
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [savedVehicles, setSavedVehicles] = useState([]);
+  const [year, setYear] = useState('');
+  const [make, setMake] = useState('');
+  const [model, setModel] = useState('');
+  const [engine, setEngine] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
-  const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [products, setProducts] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [savedVehicles, setSavedVehicles] = useState([]);
-  const [showFilters, setShowFilters] = useState(false);
-  const [sortBy, setSortBy] = useState('relevance');
-  const [priceRange, setPriceRange] = useState('all');
-  const [brandFilter, setBrandFilter] = useState('all');
-  const [viewMode, setViewMode] = useState('grid');
+
+  const availableModels = make ? (vehicleModels[make] || []) : [];
+  const availableEngines = model ? (vehicleEngines[model] || vehicleEngines['default']) : [];
 
   useEffect(() => {
     loadVehicles();
+    loadFeaturedProducts();
   }, []);
 
   const loadVehicles = async () => {
@@ -65,202 +57,85 @@ export default function PartsCatalog() {
     }
   };
 
-  const categories = [
-    {
-      id: 'performance',
-      name: 'Performance Parts',
-      icon: Zap,
-      count: '15,000+',
-      image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=400&fit=crop',
-      subcategories: ['Turbochargers', 'Cold Air Intakes', 'Exhaust Systems', 'Tuners & Programmers']
-    },
-    {
-      id: 'exterior',
-      name: 'Exterior',
-      icon: Car,
-      count: '25,000+',
-      image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&h=400&fit=crop',
-      subcategories: ['Bumpers', 'Grilles', 'Hoods', 'Fender Flares', 'Body Kits']
-    },
-    {
-      id: 'wheels',
-      name: 'Wheels & Tires',
-      icon: Cog,
-      count: '50,000+',
-      image: 'https://images.unsplash.com/photo-1614113489855-66422ad300a4?w=600&h=400&fit=crop',
-      subcategories: ['Wheels', 'Tires', 'Wheel Spacers', 'Lug Nuts', 'TPMS']
-    },
-    {
-      id: 'suspension',
-      name: 'Suspension',
-      icon: Gauge,
-      count: '12,000+',
-      image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&h=400&fit=crop',
-      subcategories: ['Coilovers', 'Lift Kits', 'Lowering Springs', 'Shocks', 'Control Arms']
-    },
-    {
-      id: 'brakes',
-      name: 'Brakes',
-      icon: Shield,
-      count: '18,000+',
-      image: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=400&fit=crop',
-      subcategories: ['Brake Pads', 'Rotors', 'Calipers', 'Brake Kits', 'Brake Lines']
-    },
-    {
-      id: 'lighting',
-      name: 'Lighting',
-      icon: Lightbulb,
-      count: '8,000+',
-      image: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600&h=400&fit=crop',
-      subcategories: ['LED Headlights', 'Tail Lights', 'Light Bars', 'Interior Lights']
-    },
-    {
-      id: 'interior',
-      name: 'Interior',
-      icon: Package,
-      count: '20,000+',
-      image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=400&fit=crop',
-      subcategories: ['Seat Covers', 'Floor Mats', 'Steering Wheels', 'Shift Knobs']
-    },
-    {
-      id: 'electronics',
-      name: 'Electronics & Audio',
-      icon: Radio,
-      count: '10,000+',
-      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop',
-      subcategories: ['Stereos', 'Speakers', 'Amplifiers', 'Dash Cams']
-    },
-    {
-      id: 'maintenance',
-      name: 'Maintenance & Fluids',
-      icon: Droplets,
-      count: '15,000+',
-      image: 'https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=600&h=400&fit=crop',
-      subcategories: ['Oil', 'Filters', 'Coolant', 'Transmission Fluid', 'Tools']
-    },
-    {
-      id: 'engine',
-      name: 'Engine & Drivetrain',
-      icon: Wrench,
-      count: '22,000+',
-      image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&h=400&fit=crop',
-      subcategories: ['Engine Parts', 'Transmission', 'Clutches', 'Driveshafts']
-    },
-    {
-      id: 'towing',
-      name: 'Towing & Recovery',
-      icon: Truck,
-      count: '5,000+',
-      image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&h=400&fit=crop',
-      subcategories: ['Hitches', 'Tow Hooks', 'Winches', 'Tow Straps']
-    },
-    {
-      id: 'oem',
-      name: 'OEM Replacement',
-      icon: Shield,
-      count: '100,000+',
-      image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=400&fit=crop',
-      subcategories: ['OEM Parts', 'Factory Replacements']
+  const loadFeaturedProducts = async () => {
+    setLoading(true);
+    try {
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Generate 8 featured automotive products for an e-commerce store. Mix of popular items like brake pads, air filters, spark plugs, LED headlights, floor mats, etc. Return realistic products with multiple retailer pricing.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            products: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  id: { type: "string" },
+                  name: { type: "string" },
+                  brand: { type: "string" },
+                  price: { type: "number" },
+                  originalPrice: { type: "number" },
+                  retailer: { type: "string" },
+                  image: { type: "string" },
+                  rating: { type: "number" },
+                  reviews: { type: "number" },
+                  inStock: { type: "boolean" },
+                  buyUrl: { type: "string" }
+                }
+              }
+            }
+          }
+        },
+        add_context_from_internet: true
+      });
+      setFeaturedProducts(response.products || []);
+    } catch (err) {
+      console.error(err);
     }
+    setLoading(false);
+  };
+
+  const handleVehicleGo = () => {
+    if (year && make && model) {
+      const vehicle = { year, make, model, engine };
+      setSelectedVehicle(vehicle);
+      toast.success(`Vehicle set: ${year} ${make} ${model}`);
+    }
+  };
+
+  const categoryIcons = [
+    { name: 'Wheels & Tires', icon: '🛞', id: 'wheels' },
+    { name: 'Brakes', icon: '🔴', id: 'brakes' },
+    { name: 'Engine Parts', icon: '⚙️', id: 'engine' },
+    { name: 'Suspension', icon: '🔧', id: 'suspension' },
+    { name: 'Exhaust', icon: '💨', id: 'exhaust' },
+    { name: 'Lighting', icon: '💡', id: 'lighting' },
+    { name: 'Interior', icon: '🪑', id: 'interior' },
+    { name: 'Body Parts', icon: '🚗', id: 'body' }
   ];
 
-  const searchProducts = async (query, category, vehicle) => {
+  const manufacturerLogos = [
+    { name: 'Ford', logo: 'https://images.unsplash.com/photo-1612825173281-9a193378527e?w=100&h=60&fit=crop' },
+    { name: 'Chevrolet', logo: 'https://images.unsplash.com/photo-1617469767053-d3b523a0b982?w=100&h=60&fit=crop' },
+    { name: 'Toyota', logo: 'https://images.unsplash.com/photo-1629897048514-3dd7414fe72a?w=100&h=60&fit=crop' },
+    { name: 'Honda', logo: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=100&h=60&fit=crop' },
+    { name: 'BMW', logo: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=100&h=60&fit=crop' },
+    { name: 'Mercedes', logo: 'https://images.unsplash.com/photo-1618843479619-f3d0d3e8e729?w=100&h=60&fit=crop' },
+    { name: 'Audi', logo: 'https://images.unsplash.com/photo-1610768764270-790fbec18178?w=100&h=60&fit=crop' },
+    { name: 'Nissan', logo: 'https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=100&h=60&fit=crop' }
+  ];
+
+  const handleCategoryClick = async (category) => {
+    setSelectedCategory(category);
     setLoading(true);
     
     try {
-      const vehicleInfo = vehicle 
-        ? `${vehicle.year} ${vehicle.make} ${vehicle.model}${vehicle.engine ? ' ' + vehicle.engine : ''}`
-        : 'universal fitment';
-
-      const categoryName = category ? categories.find(c => c.id === category)?.name : 'automotive parts';
-      
-      const prompt = `You are an AI-powered automotive parts specialist with EXACT FIT INTELLIGENCE. You have access to these major retailers:
-- RockAuto.com (best prices, huge inventory)
-- FCP Euro (lifetime warranty, premium parts)
-- Summit Racing (performance parts specialist)
-- AmericanMuscle.com
-- AmericanTrucks.com  
-- AdvanceAutoParts.com
-- AutoZone.com
-- CarParts.com
-- CARiD.com
-- Amazon.com
-- eBay.com
-
-VEHICLE: ${vehicleInfo}
-CATEGORY: ${categoryName}
-SEARCH: "${query || categoryName}"
-
-CRITICAL REQUIREMENTS:
-1. Use AI to verify EXACT FIT for the vehicle (${vehicleInfo})
-2. Find 16 real products from the retailers above
-3. Each product MUST have 3-5 price options from different retailers
-4. Mark fitment as "exact" only if 100% confirmed for this specific vehicle
-5. Include real part numbers, accurate pricing ($15-$2000), and genuine brand names
-6. Provide high-quality automotive part images from unsplash
-7. Sort by best match/relevance first
-- Realistic product names
-- Accurate pricing ($20-$2000 range)
-- Proper brand names (Bosch, Denso, ACDelco, Motorcraft, etc.)
-- Real retailer assignment
-- Image URLs (use automotive part images from unsplash)
-- Fitment verification (exact or verify needed)
-- Product descriptions
-- Specifications
-
-Return a JSON object with this structure:
-{
-  "products": [
-    {
-      "id": "unique-id",
-      "name": "Product name",
-      "brand": "Brand name",
-      "price": 99.99,
-      "retailer": "RockAuto",
-      "image": "https://images.unsplash.com/photo-...",
-      "images": ["url1", "url2", "url3"],
-      "rating": 4.5,
-      "reviews": 127,
-      "fitment": "exact",
-      "isOEM": false,
-      "description": "Detailed description",
-      "specs": {
-        "Material": "Steel",
-        "Weight": "5 lbs"
-      },
-      "compatibility": "Fits 2015-2020 Ford F-150",
-      "buyUrl": "https://www.rockauto.com/...",
-      "priceComparison": [
-        {
-          "retailer": "RockAuto",
-          "price": 89.99,
-          "originalPrice": 109.99,
-          "shipping": "Free shipping on $99+",
-          "inStock": true,
-          "buyUrl": "https://www.rockauto.com/..."
-        },
-        {
-          "retailer": "FCP Euro",
-          "price": 94.99,
-          "shipping": "Free shipping",
-          "inStock": true,
-          "buyUrl": "https://www.fcpeuro.com/..."
-        },
-        {
-          "retailer": "AutoZone",
-          "price": 99.99,
-          "originalPrice": 129.99,
-          "shipping": "Free next-day on $35+",
-          "inStock": true,
-          "buyUrl": "https://www.autozone.com/..."
-        }
-      ]
-    }
-  ]
-}`;
+      const vehicleInfo = selectedVehicle 
+        ? `${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}`
+        : 'universal';
 
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt,
+        prompt: `Find 16 ${category.name} products for ${vehicleInfo}. Include multiple retailer prices for each product (RockAuto, AutoZone, Amazon, etc). Mark exact fit when applicable.`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -282,8 +157,7 @@ Return a JSON object with this structure:
                   fitment: { type: "string" },
                   isOEM: { type: "boolean" },
                   description: { type: "string" },
-                  specs: { type: "object" },
-                  compatibility: { type: "string" },
+                  inStock: { type: "boolean" },
                   buyUrl: { type: "string" },
                   priceComparison: {
                     type: "array",
@@ -292,7 +166,6 @@ Return a JSON object with this structure:
                       properties: {
                         retailer: { type: "string" },
                         price: { type: "number" },
-                        originalPrice: { type: "number" },
                         shipping: { type: "string" },
                         inStock: { type: "boolean" },
                         buyUrl: { type: "string" }
@@ -307,62 +180,13 @@ Return a JSON object with this structure:
         add_context_from_internet: true
       });
 
-      let productsData = response.products || [];
-      
-      // Apply filters and sorting
-      if (brandFilter !== 'all') {
-        productsData = productsData.filter(p => p.brand === brandFilter);
-      }
-      
-      if (priceRange !== 'all') {
-        const ranges = {
-          'under50': [0, 50],
-          '50to100': [50, 100],
-          '100to200': [100, 200],
-          'over200': [200, 99999]
-        };
-        const [min, max] = ranges[priceRange] || [0, 99999];
-        productsData = productsData.filter(p => p.price >= min && p.price <= max);
-      }
-      
-      // Sorting
-      if (sortBy === 'price-low') {
-        productsData.sort((a, b) => a.price - b.price);
-      } else if (sortBy === 'price-high') {
-        productsData.sort((a, b) => b.price - a.price);
-      } else if (sortBy === 'rating') {
-        productsData.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-      }
-      
-      setProducts(productsData);
+      setProducts(response.products || []);
     } catch (err) {
       console.error(err);
       toast.error('Failed to load products');
     }
     
     setLoading(false);
-  };
-
-  const handleCategoryClick = (category) => {
-    setSelectedCategory(category.id);
-    setSelectedSubcategory(null);
-    searchProducts('', category.id, selectedVehicle);
-  };
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      searchProducts(searchQuery, selectedCategory, selectedVehicle);
-    }
-  };
-
-  const handleVehicleSelect = (vehicle) => {
-    setSelectedVehicle(vehicle);
-    const vehicleStr = `${vehicle.year} ${vehicle.make} ${vehicle.model}${vehicle.engine ? ' ' + vehicle.engine : ''}`;
-    toast.success(`✓ Vehicle set - Showing guaranteed fit parts for ${vehicleStr}`, { duration: 4000 });
-    if (selectedCategory) {
-      searchProducts(searchQuery, selectedCategory, vehicle);
-    }
   };
 
   const handleSaveProduct = async (product) => {
@@ -375,246 +199,232 @@ Return a JSON object with this structure:
           ? `${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}`
           : 'Universal',
         manufacturer: product.brand,
-        category: selectedCategory || 'general',
-        notes: product.description
+        category: selectedCategory?.id || 'general'
       });
+      toast.success('Saved to your parts list!');
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleBackToCategories = () => {
-    setSelectedCategory(null);
-    setSelectedSubcategory(null);
-    setProducts([]);
-  };
-
-  return (
-    <div className="min-h-screen bg-[#111]">
-      {/* Header */}
-      <div className="bg-[#0a0a0a] border-b border-[#333] sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          {/* Top Bar */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <Sparkles className="w-6 h-6 text-orange-500" />
-              <h1 className="text-white font-bold text-2xl">Parts Catalog</h1>
-              <Badge className="bg-orange-500/20 text-orange-400 border-0">
-                200,000+ Products
-              </Badge>
-            </div>
-            
-            {selectedCategory && (
-              <Button
-                onClick={handleBackToCategories}
-                variant="outline"
-                className="border-[#444] text-gray-300"
-              >
-                ← Back to Categories
-              </Button>
-            )}
-          </div>
-
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="mb-3">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <Input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by part name, brand, or part number..."
-                className="w-full bg-[#1a1a1a] border-[#333] text-white pl-12 pr-4 h-12"
-              />
-              <Button
-                type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600"
-              >
-                Search
-              </Button>
-            </div>
-          </form>
-
-          {/* Vehicle Selector */}
-          <VehicleSelector 
-            onSelect={handleVehicleSelect}
-            savedVehicles={savedVehicles}
-          />
-
-          {/* Active Filters */}
-          {(selectedVehicle || selectedCategory) && (
-            <div className="flex flex-wrap gap-2 mt-3">
-              {selectedVehicle && (
-                <Badge className="bg-orange-500/20 text-orange-400 border border-orange-500/50">
-                  <Car className="w-3 h-3 mr-1" />
-                  {selectedVehicle.year} {selectedVehicle.make} {selectedVehicle.model}
-                </Badge>
-              )}
-              {selectedCategory && (
-                <Badge className="bg-blue-500/20 text-blue-400 border border-blue-500/50">
-                  {categories.find(c => c.id === selectedCategory)?.name}
-                </Badge>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {!selectedCategory ? (
-          /* Categories Grid */
-          <div>
-            <h2 className="text-white font-bold text-xl mb-6">Shop by Category</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {categories.map((category) => (
-                <CategoryCard
-                  key={category.id}
-                  category={category}
-                  onClick={() => handleCategoryClick(category)}
-                />
-              ))}
-            </div>
-          </div>
-        ) : loading ? (
-          /* Loading State */
-          <div className="flex flex-col items-center justify-center py-20">
-            <Loader2 className="w-12 h-12 text-orange-500 animate-spin mb-4" />
-            <p className="text-white font-medium mb-2">Searching Products...</p>
-            <p className="text-gray-400 text-sm">Checking inventory across 10+ retailers</p>
-          </div>
-        ) : (
-          /* Products Grid with Filters */
-          <div>
-            {/* Header with Filters */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h2 className="text-white font-bold text-2xl mb-1">
-                    {categories.find(c => c.id === selectedCategory)?.name}
-                  </h2>
-                  <p className="text-gray-400 text-sm">{products.length} products found</p>
-                </div>
-                
-                {/* View Toggle */}
+  if (selectedCategory && products.length > 0) {
+    return (
+      <div className="min-h-screen bg-white">
+        {/* Sticky Vehicle Bar */}
+        <div className="bg-[#1a1f2e] text-white py-3 px-4 sticky top-0 z-40">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-medium">YOUR VEHICLE:</span>
+              {selectedVehicle ? (
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant={viewMode === 'grid' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setViewMode('grid')}
-                    className={viewMode === 'grid' ? 'bg-orange-500' : 'border-[#444]'}
-                  >
-                    <Grid3x3 className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === 'list' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setViewMode('list')}
-                    className={viewMode === 'list' ? 'bg-orange-500' : 'border-[#444]'}
-                  >
-                    <List className="w-4 h-4" />
-                  </Button>
+                  <span className="text-orange-500 font-semibold">
+                    {selectedVehicle.year} {selectedVehicle.make} {selectedVehicle.model}
+                  </span>
+                  <button className="text-red-500 text-sm" onClick={() => setSelectedVehicle(null)}>✕</button>
                 </div>
-              </div>
-
-              {/* Filters Bar - E-commerce Style */}
-              <div className="bg-[#1a1a1a] border border-[#333] rounded-xl p-4">
-                <div className="flex flex-wrap items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <SlidersHorizontal className="w-4 h-4 text-gray-400" />
-                    <span className="text-gray-400 text-sm font-medium">Filters:</span>
-                  </div>
-
-                  {/* Sort */}
-                  <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger className="w-40 bg-[#222] border-[#444] text-white">
-                      <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="relevance">Best Match</SelectItem>
-                      <SelectItem value="price-low">Price: Low to High</SelectItem>
-                      <SelectItem value="price-high">Price: High to Low</SelectItem>
-                      <SelectItem value="rating">Top Rated</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {/* Price Range */}
-                  <Select value={priceRange} onValueChange={setPriceRange}>
-                    <SelectTrigger className="w-40 bg-[#222] border-[#444] text-white">
-                      <SelectValue placeholder="Price" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Prices</SelectItem>
-                      <SelectItem value="under50">Under $50</SelectItem>
-                      <SelectItem value="50to100">$50 - $100</SelectItem>
-                      <SelectItem value="100to200">$100 - $200</SelectItem>
-                      <SelectItem value="over200">Over $200</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {/* Brand Filter */}
-                  <Select value={brandFilter} onValueChange={setBrandFilter}>
-                    <SelectTrigger className="w-40 bg-[#222] border-[#444] text-white">
-                      <SelectValue placeholder="Brand" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Brands</SelectItem>
-                      <SelectItem value="Bosch">Bosch</SelectItem>
-                      <SelectItem value="Denso">Denso</SelectItem>
-                      <SelectItem value="ACDelco">ACDelco</SelectItem>
-                      <SelectItem value="Motorcraft">Motorcraft</SelectItem>
-                      <SelectItem value="Monroe">Monroe</SelectItem>
-                      <SelectItem value="KYB">KYB</SelectItem>
-                      <SelectItem value="Moog">Moog</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {/* Active Filters Badge */}
-                  {(sortBy !== 'relevance' || priceRange !== 'all' || brandFilter !== 'all') && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setSortBy('relevance');
-                        setPriceRange('all');
-                        setBrandFilter('all');
-                      }}
-                      className="text-orange-500 hover:text-orange-400"
-                    >
-                      Clear Filters
-                    </Button>
-                  )}
-                </div>
-              </div>
+              ) : (
+                <span className="text-gray-400 text-sm">No vehicle selected</span>
+              )}
             </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSelectedCategory(null)}
+              className="text-white hover:text-orange-500"
+            >
+              ← Back to Home
+            </Button>
+          </div>
+        </div>
 
-            {/* Products Display */}
-            <div className={viewMode === 'grid' 
-              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5'
-              : 'space-y-4'
-            }>
+        {/* Breadcrumb */}
+        <div className="bg-gray-50 border-b py-3 px-4">
+          <div className="max-w-7xl mx-auto flex items-center gap-2 text-sm">
+            <button onClick={() => setSelectedCategory(null)} className="text-blue-600 hover:underline">Home</button>
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <span className="text-gray-700">{selectedCategory.name}</span>
+          </div>
+        </div>
+
+        {/* Products Grid */}
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{selectedCategory.name}</h1>
+          <p className="text-gray-600 mb-6">{products.length} products</p>
+
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="w-12 h-12 text-orange-500 animate-spin" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
               {products.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
                   onViewDetails={setSelectedProduct}
                   onSave={handleSaveProduct}
-                  viewMode={viewMode}
+                  viewMode="grid"
                 />
               ))}
             </div>
+          )}
+        </div>
 
-            {products.length === 0 && !loading && (
-              <div className="text-center py-20">
-                <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-white font-medium mb-2">No products found</p>
-                <p className="text-gray-400 text-sm">Try adjusting your search or filters</p>
+        <ProductDetail
+          product={selectedProduct}
+          open={!!selectedProduct}
+          onOpenChange={(open) => !open && setSelectedProduct(null)}
+          onSave={handleSaveProduct}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Sticky Vehicle Selector Bar */}
+      <div className="bg-[#1a1f2e] text-white py-3 px-4 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <span className="text-sm font-medium">SELECT YOUR VEHICLE</span>
+            <div className="flex items-center gap-2 flex-1 max-w-4xl">
+              <Select value={make} onValueChange={(val) => { setMake(val); setModel(''); setEngine(''); }}>
+                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9">
+                  <SelectValue placeholder="Make" />
+                </SelectTrigger>
+                <SelectContent>
+                  {vehicleMakes.map((m) => (
+                    <SelectItem key={m} value={m}>{m}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={model} onValueChange={(val) => { setModel(val); setEngine(''); }} disabled={!make}>
+                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9">
+                  <SelectValue placeholder="Model" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableModels.map((m) => (
+                    <SelectItem key={m} value={m}>{m}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={year} onValueChange={setYear}>
+                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9">
+                  <SelectValue placeholder="Year" />
+                </SelectTrigger>
+                <SelectContent>
+                  {vehicleYears.map((y) => (
+                    <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={engine} onValueChange={setEngine} disabled={!model}>
+                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9">
+                  <SelectValue placeholder="Submodel" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableEngines.map((e) => (
+                    <SelectItem key={e} value={e}>{e}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Button 
+                onClick={handleVehicleGo}
+                disabled={!year || !make || !model}
+                className="bg-orange-600 hover:bg-orange-700 text-white h-9 px-8"
+              >
+                GO
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Hero Banner */}
+      <div className="relative h-[500px] bg-gradient-to-r from-gray-900 to-gray-800">
+        <img 
+          src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1600&h=500&fit=crop" 
+          alt="Hero"
+          className="w-full h-full object-cover opacity-40"
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+              CUSTOMIZE, UPGRADE, REPLACE
+            </h1>
+            <Button className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-6 text-lg">
+              Shop Now
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Category Icons */}
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="grid grid-cols-4 md:grid-cols-8 gap-6">
+          {categoryIcons.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => handleCategoryClick(cat)}
+              className="flex flex-col items-center gap-3 group"
+            >
+              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center text-4xl group-hover:bg-orange-50 transition-colors">
+                {cat.icon}
               </div>
-            )}
+              <span className="text-sm font-medium text-gray-700 text-center group-hover:text-orange-600">
+                {cat.name}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Shop By Make */}
+      <div className="bg-gray-50 py-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Shop By Make</h2>
+            <button className="text-blue-600 hover:underline text-sm font-medium">View all</button>
+          </div>
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-6">
+            {manufacturerLogos.map((mfg) => (
+              <button
+                key={mfg.name}
+                className="bg-white p-4 rounded-lg hover:shadow-lg transition-shadow flex items-center justify-center"
+              >
+                <img src={mfg.logo} alt={mfg.name} className="w-full h-12 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Featured Products */}
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Featured Products</h2>
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-12 h-12 text-orange-500 animate-spin" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+            {featuredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onViewDetails={setSelectedProduct}
+                onSave={handleSaveProduct}
+                viewMode="grid"
+              />
+            ))}
           </div>
         )}
       </div>
 
-      {/* Product Detail Modal */}
       <ProductDetail
         product={selectedProduct}
         open={!!selectedProduct}
