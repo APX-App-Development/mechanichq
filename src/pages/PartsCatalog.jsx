@@ -15,7 +15,10 @@ import {
   Zap,
   Settings,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  Home,
+  Car,
+  ShoppingCart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
