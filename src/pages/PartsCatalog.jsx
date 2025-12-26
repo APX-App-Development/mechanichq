@@ -135,7 +135,17 @@ export default function PartsCatalog() {
         : 'universal';
 
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Find 16 ${category.name} products for ${vehicleInfo}. Include multiple retailer prices for each product (RockAuto, AutoZone, Amazon, etc). Mark exact fit when applicable.`,
+        prompt: `Search the internet for REAL ${category.name} products available right now for ${vehicleInfo}. 
+
+CRITICAL INSTRUCTIONS:
+1. Find 16 actual products from real retailers (AmericanMuscle, AutoZone, Amazon, RockAuto, etc.)
+2. For each product, provide 3-5 HIGH QUALITY product images from the actual retailer websites
+3. Extract real product photos showing different angles: front, side, installed view, packaging
+4. Include genuine retailer product page URLs
+5. Get accurate current pricing and availability
+6. Mark which products are exact fit vs universal
+
+Use add_context_from_internet to scrape actual product listings and images.`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -287,12 +297,23 @@ export default function PartsCatalog() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <span className="text-sm font-medium">SELECT YOUR VEHICLE</span>
-            <div className="flex items-center gap-2 flex-1 max-w-4xl">
+            <div className="flex items-center gap-2 flex-1 max-w-4xl flex-wrap">
+              <Select value={year} onValueChange={setYear}>
+                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9 min-w-[100px]">
+                  <SelectValue placeholder="Year" />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  {vehicleYears.map((y) => (
+                    <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
               <Select value={make} onValueChange={(val) => { setMake(val); setModel(''); setEngine(''); }}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9">
+                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9 min-w-[120px]">
                   <SelectValue placeholder="Make" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-60">
                   {vehicleMakes.map((m) => (
                     <SelectItem key={m} value={m}>{m}</SelectItem>
                   ))}
@@ -300,32 +321,21 @@ export default function PartsCatalog() {
               </Select>
 
               <Select value={model} onValueChange={(val) => { setModel(val); setEngine(''); }} disabled={!make}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9">
+                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9 min-w-[120px]">
                   <SelectValue placeholder="Model" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-60">
                   {availableModels.map((m) => (
                     <SelectItem key={m} value={m}>{m}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              <Select value={year} onValueChange={setYear}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9">
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {vehicleYears.map((y) => (
-                    <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
               <Select value={engine} onValueChange={setEngine} disabled={!model}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9">
-                  <SelectValue placeholder="Submodel" />
+                <SelectTrigger className="bg-white/10 border-white/20 text-white h-9 min-w-[100px]">
+                  <SelectValue placeholder="Engine" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-60">
                   {availableEngines.map((e) => (
                     <SelectItem key={e} value={e}>{e}</SelectItem>
                   ))}
