@@ -118,7 +118,17 @@ YOUR TASK:
 7. Include ${type === 'oem' ? 'OEM' : 'aftermarket'} focus but show all options
 8. Prioritize retailers with affiliate programs
 
-EXTRACT COMPREHENSIVE DATA:`;
+EXTRACT COMPREHENSIVE DATA INCLUDING REAL IMAGES:
+When scanning retailer websites, you MUST extract the actual product image URLs from their listings.
+Look for image tags, CDN URLs, and download links on product pages.
+Common image URL patterns:
+- https://cdn.shopify.com/s/files/1/...
+- https://m.media-amazon.com/images/I/...
+- https://www.rockauto.com/info/...
+- https://www.autozone.com/cdn/images/...
+- https://carid.com/images/...
+
+Include 3-5 images per product showing different angles.`;
 
         const response = await base44.integrations.Core.InvokeLLM({
           prompt: prompt + `

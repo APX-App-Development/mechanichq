@@ -61,7 +61,15 @@ export default function PartsCatalog() {
     setLoading(true);
     try {
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate 8 featured automotive products for an e-commerce store. Mix of popular items like brake pads, air filters, spark plugs, LED headlights, floor mats, etc. Return realistic products with multiple retailer pricing.`,
+        prompt: `You are a web scraper. Scan AmericanMuscle.com, AutoZone.com, Amazon.com auto parts, and RockAuto.com.
+
+Extract 8 REAL featured automotive products with:
+- REAL product images from these retailer websites (full image URLs)
+- Live pricing from each retailer
+- Direct product page URLs
+- Stock availability
+
+Pull actual product listings with real images like https://cdn.shopify.com/... or https://m.media-amazon.com/images/...`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -100,6 +108,11 @@ export default function PartsCatalog() {
       const vehicle = { year, make, model, engine };
       setSelectedVehicle(vehicle);
       toast.success(`Vehicle set: ${year} ${make} ${model}`);
+      
+      // If viewing a category, refresh products with new vehicle
+      if (selectedCategory) {
+        handleCategoryClick(selectedCategory);
+      }
     }
   };
 
@@ -135,7 +148,34 @@ export default function PartsCatalog() {
         : 'universal';
 
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Find 16 ${category.name} products for ${vehicleInfo}. Include multiple retailer prices for each product (RockAuto, AutoZone, Amazon, etc). Mark exact fit when applicable.`,
+        prompt: `You are an advanced web scraper with access to every automotive retailer website.
+
+CRITICAL: Find 16 ${category.name} products for ${vehicleInfo}.
+
+SCRAPE these retailers and extract REAL product data:
+• AmericanMuscle.com
+• AmericanTrucks.com
+• AutoZone.com
+• Amazon.com (search: auto parts)
+• eBay Motors
+• RockAuto.com
+• CARiD.com
+• Advance Auto Parts
+• O'Reilly Auto Parts
+
+FOR EACH PRODUCT YOU MUST:
+1. Pull REAL product images directly from retailer websites (full URLs)
+2. Extract actual product listings with live prices
+3. Get direct product page URLs (not search results)
+4. Include multiple images per product (different angles)
+5. Mark exact fitment for the vehicle
+
+Return REAL images like:
+- https://cdn.shopify.com/s/files/1/...product.jpg
+- https://m.media-amazon.com/images/I/...jpg
+- https://www.autozone.com/cdn/...jpg
+
+DO NOT use placeholder images. Scrape real retailer image URLs.`,
         response_json_schema: {
           type: "object",
           properties: {
