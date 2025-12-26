@@ -81,42 +81,44 @@ export default function SearchResults() {
     }
     
     try {
-        const prompt = `You are an advanced automotive parts search engine with COMPLETE ACCESS to the entire internet including all retailer product databases and image CDNs.
+        const prompt = `You are an advanced automotive parts search engine with COMPLETE ACCESS to the entire internet.
 
-CRITICAL MISSION: Actively web scrape REAL PRODUCT DATA from actual retailer websites - including their REAL product images hosted on their servers.
+CRITICAL MISSION: Scan and scrape EVERY automotive retailer website to find ALL available parts matching this search.
 
 SEARCH REQUEST: "${searchQuery}"
 ${year && make && model ? `VEHICLE: ${year} ${make} ${model}${engine ? ` ${engine}` : ''}` : ''}
 
-RETAILERS TO ACTIVELY SCRAPE:
-• AmericanMuscle.com - Extract their actual product photos from their CDN
-• AmericanTrucks.com - Get real product images from their image servers
-• AdvanceAutoParts.com - Scrape product photos from their listings
-• AutoZone.com - Extract images from their product pages
-• CarParts.com - Get actual part photos from their site
-• CARiD.com - Extract high-quality product images
-• Amazon.com - Get actual product photos from Amazon listings
-• eBay.com - Extract images from eBay Motors listings
-• RockAuto.com - Get real part images
-• FCP Euro - Extract product photos
-• Summit Racing - Get actual images
-• RealTruck.com - Extract photos
-• 4WheelParts.com - Get product images
+RETAILERS TO SCAN (prioritize these):
+• AmericanMuscle.com (affiliate program available)
+• AmericanTrucks.com (affiliate program available)
+• CustomWheelOffset.com
+• AdvanceAutoParts.com (affiliate program available)
+• AutoZone.com (affiliate program available)
+• CarParts.com (affiliate program available)
+• CARiD.com (affiliate program available)
+• Amazon.com (Amazon Associates affiliate)
+• eBay.com & eBayMotors.com (eBay Partner Network affiliate)
+• RockAuto.com
+• FCP Euro
+• Summit Racing
+• Jegs
+• O'Reilly Auto Parts
+• NAPA Auto Parts
+• Tire Rack
+• 1A Auto
+• PartsGeek
 
-IMAGE EXTRACTION REQUIREMENTS:
-1. Extract ACTUAL image URLs from retailer websites (jpg, png, webp)
-2. Get multiple angles/views per product (front, side, detail shots)
-3. Use high-resolution images from retailer CDNs
-4. Format: ["https://retailer-cdn.com/images/product1.jpg", "https://retailer-cdn.com/images/product2.jpg"]
-5. DO NOT use placeholders or generic stock photos
-6. Each part should have 2-5 real retailer images
+YOUR TASK:
+1. Search EVERY retailer website for this exact part
+2. Extract REAL product listings with ACTUAL images from retailer sites
+3. Get LIVE pricing, availability, and stock status
+4. Pull complete product details: name, brand, part numbers, descriptions, specs
+5. Find ALL images the retailer has (multiple angles if available)
+6. Get exact product URLs that link directly to the retailer's product page
+7. Include ${type === 'oem' ? 'OEM' : 'aftermarket'} focus but show all options
+8. Prioritize retailers with affiliate programs
 
-DATA EXTRACTION REQUIREMENTS:
-1. Get ACTUAL product page URLs (direct links to buy the exact part)
-2. Extract LIVE pricing and availability
-3. Get complete product specifications from retailer descriptions
-4. Include shipping information
-5. Mark which retailers have affiliate programs`;
+EXTRACT COMPREHENSIVE DATA:`;
 
         const response = await base44.integrations.Core.InvokeLLM({
           prompt: prompt + `
