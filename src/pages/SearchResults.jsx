@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { addAffiliateTracking, trackAffiliateClick } from '@/components/AffiliateTracker';
 
 export default function SearchResults() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -80,17 +81,44 @@ export default function SearchResults() {
     }
     
     try {
-        const prompt = type === 'oem' 
-          ? `You are an expert automotive parts specialist with access to OEM parts catalogs from ACDelco, Mopar, Toyota/Lexus, Honda/Acura, Ford/Motorcraft, Nissan, BMW, and other manufacturers.
+        const prompt = `You are an advanced automotive parts search engine with COMPLETE ACCESS to the entire internet.
 
-    SEARCH REQUEST: "${searchQuery}"
+CRITICAL MISSION: Scan and scrape EVERY automotive retailer website to find ALL available parts matching this search.
 
-    Search the real OEM catalogs and provide accurate, genuine part information.`
-          : `You are an expert automotive parts specialist with access to AFTERMARKET parts catalogs from top brands like Bosch, Denso, NGK, Monroe, KYB, Moog, Timken, Gates, Dayco, Wagner, Centric, EBC, Hawk Performance, and more.
+SEARCH REQUEST: "${searchQuery}"
+${year && make && model ? `VEHICLE: ${year} ${make} ${model}${engine ? ` ${engine}` : ''}` : ''}
 
-    SEARCH REQUEST: "${searchQuery}"
+RETAILERS TO SCAN (prioritize these):
+• AmericanMuscle.com (affiliate program available)
+• AmericanTrucks.com (affiliate program available)
+• CustomWheelOffset.com
+• AdvanceAutoParts.com (affiliate program available)
+• AutoZone.com (affiliate program available)
+• CarParts.com (affiliate program available)
+• CARiD.com (affiliate program available)
+• Amazon.com (Amazon Associates affiliate)
+• eBay.com & eBayMotors.com (eBay Partner Network affiliate)
+• RockAuto.com
+• FCP Euro
+• Summit Racing
+• Jegs
+• O'Reilly Auto Parts
+• NAPA Auto Parts
+• Tire Rack
+• 1A Auto
+• PartsGeek
 
-    Search aftermarket parts catalogs and provide high-quality aftermarket alternatives. Focus on trusted brands with good warranties and performance.`;
+YOUR TASK:
+1. Search EVERY retailer website for this exact part
+2. Extract REAL product listings with ACTUAL images from retailer sites
+3. Get LIVE pricing, availability, and stock status
+4. Pull complete product details: name, brand, part numbers, descriptions, specs
+5. Find ALL images the retailer has (multiple angles if available)
+6. Get exact product URLs that link directly to the retailer's product page
+7. Include ${type === 'oem' ? 'OEM' : 'aftermarket'} focus but show all options
+8. Prioritize retailers with affiliate programs
+
+EXTRACT COMPREHENSIVE DATA:`;
 
         const response = await base44.integrations.Core.InvokeLLM({
           prompt: prompt + `
@@ -99,55 +127,57 @@ Return a JSON object with this structure:
 {
   "parts": [
     {
-      "part_name": "Full descriptive part name",
-      "oem_part_number": "Genuine OEM part number",
+      "part_name": "EXACT part name from retailer listing",
+      "oem_part_number": "Real part/SKU number",
+      "manufacturer": "Brand name",
       "msrp_price": 49.99,
-      "description": "Detailed description",
-      "category": "Category (Brakes, Engine, Filters, etc.)",
-      "manufacturer": "${type === 'oem' ? 'OEM Brand (Motorcraft, ACDelco, Toyota Genuine, etc.)' : 'Aftermarket Brand (Bosch, Denso, NGK, Monroe, etc.)'}",
-      "is_genuine_oem": ${type === 'oem' ? 'true' : 'false'},
-      "fitment_note": "Any specific fitment notes",
-      "supersession": {
-        "new_part_number": "New part number if superseded",
-        "reason": "Why it was updated"
-      },
+      "description": "Full product description from retailer (include all specs, materials, features)",
+      "category": "Category (Brakes, Engine, Filters, Suspension, etc.)",
+      "is_genuine_oem": true/false,
+      "fitment_note": "Exact fitment compatibility",
+      "images": [
+        "https://actual-retailer-image-url-1.jpg",
+        "https://actual-retailer-image-url-2.jpg",
+        "https://actual-retailer-image-url-3.jpg"
+      ],
       "purchase_links": [
-        {"store": "RockAuto", "url": "https://www.rockauto.com/en/catalog/...", "price": 39.99},
-        {"store": "Amazon", "url": "https://www.amazon.com/s?k=...", "price": 44.99},
-        {"store": "AutoZone", "url": "https://www.autozone.com/...", "price": 47.99}
+        {
+          "store": "Store Name",
+          "url": "https://exact-product-page-url.com/product/12345",
+          "price": 39.99,
+          "availability": "In Stock" / "Low Stock" / "Out of Stock",
+          "shipping": "Free shipping" / "$9.99" / "Ships in 2-3 days",
+          "has_affiliate": true/false
+        }
       ],
-      "installation_steps": [
-        "Safely lift and secure the vehicle on jack stands",
-        "Remove the wheel to access the brake components",
-        "Remove caliper mounting bolts (typically 14mm or 17mm)",
-        "Hang caliper with wire - do not let it hang by the brake line",
-        "Remove old brake pads and inspect rotor surface",
-        "Compress caliper piston using a C-clamp or brake tool",
-        "Install new pads with wear indicator facing inward",
-        "Reinstall caliper and torque bolts to spec",
-        "Reinstall wheel and torque lug nuts in star pattern",
-        "Pump brake pedal several times before driving"
-      ],
+      "specifications": {
+        "weight": "5 lbs",
+        "dimensions": "10x8x3 inches",
+        "material": "Cast iron",
+        "warranty": "Lifetime",
+        "country_of_origin": "USA"
+      },
+      "installation_steps": ["Step 1...", "Step 2..."],
       "torque_specs": [
-        {"component": "Caliper bracket bolts", "ft_lbs": 85, "nm": 115},
-        {"component": "Caliper slide pins", "ft_lbs": 25, "nm": 34},
-        {"component": "Wheel lug nuts", "ft_lbs": 100, "nm": 135}
+        {"component": "Part name", "ft_lbs": 85, "nm": 115}
       ],
-      "difficulty": "Medium",
-      "estimated_time": "1-2 hours per axle",
-      "tools_needed": ["Floor jack & stands", "Lug wrench", "Socket set (metric)", "C-clamp or brake tool", "Wire or bungee cord", "Brake cleaner", "Torque wrench"]
+      "difficulty": "Easy/Medium/Hard",
+      "estimated_time": "1-2 hours",
+      "tools_needed": ["Tool 1", "Tool 2"]
     }
   ]
 }
 
-IMPORTANT:
-- Use REAL ${type === 'oem' ? 'OEM' : 'AFTERMARKET'} part numbers
-- Include accurate ${type === 'oem' ? 'MSRP' : 'retail'} prices
-- ${type === 'aftermarket' ? 'Mention brand reputation and warranty info' : 'Emphasize genuine OEM quality'}
-- Provide detailed installation steps with specific measurements
-- Include torque specifications in both ft-lbs and Nm
-- List all required tools
-- Provide 3-6 relevant parts`,
+CRITICAL REQUIREMENTS:
+- Return 10-20 parts per search (MAXIMUM coverage)
+- ALL purchase_links must be REAL direct product page URLs (not search pages)
+- Extract REAL product images from retailer websites
+- Include ALL retailers that have the part
+- Get LIVE current pricing
+- Mark which retailers have affiliate programs (has_affiliate: true)
+- Pull complete product specifications from retailer listings
+- Include shipping info and availability
+- VERIFY fitment accuracy for the vehicle`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -158,19 +188,13 @@ IMPORTANT:
                 properties: {
                   part_name: { type: "string" },
                   oem_part_number: { type: "string" },
+                  manufacturer: { type: "string" },
                   msrp_price: { type: "number" },
                   description: { type: "string" },
                   category: { type: "string" },
-                  manufacturer: { type: "string" },
                   is_genuine_oem: { type: "boolean" },
                   fitment_note: { type: "string" },
-                  supersession: {
-                    type: "object",
-                    properties: {
-                      new_part_number: { type: "string" },
-                      reason: { type: "string" }
-                    }
-                  },
+                  images: { type: "array", items: { type: "string" } },
                   purchase_links: {
                     type: "array",
                     items: {
@@ -178,8 +202,21 @@ IMPORTANT:
                       properties: {
                         store: { type: "string" },
                         url: { type: "string" },
-                        price: { type: "number" }
+                        price: { type: "number" },
+                        availability: { type: "string" },
+                        shipping: { type: "string" },
+                        has_affiliate: { type: "boolean" }
                       }
+                    }
+                  },
+                  specifications: {
+                    type: "object",
+                    properties: {
+                      weight: { type: "string" },
+                      dimensions: { type: "string" },
+                      material: { type: "string" },
+                      warranty: { type: "string" },
+                      country_of_origin: { type: "string" }
                     }
                   },
                   installation_steps: { type: "array", items: { type: "string" } },
@@ -205,10 +242,19 @@ IMPORTANT:
         add_context_from_internet: true
       });
 
-      setResults(response.parts || []);
+      // Process results: add affiliate tracking to URLs
+      const processedParts = (response.parts || []).map(part => ({
+        ...part,
+        purchase_links: (part.purchase_links || []).map(link => ({
+          ...link,
+          url: addAffiliateTracking(link.url, link.store)
+        }))
+      }));
+      
+      setResults(processedParts);
       
       // Cache the search for offline use
-      cacheSearch(searchQuery, response.parts || []);
+      cacheSearch(searchQuery, processedParts);
       
       await base44.entities.PartSearch.create({
         query: searchQuery,
@@ -374,9 +420,9 @@ IMPORTANT:
               <div className="w-16 h-16 border-4 border-[#222] border-t-orange-500 rounded-full animate-spin" />
               <Sparkles className="w-6 h-6 text-orange-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
             </div>
-            <p className="text-white font-medium mb-2">Searching OEM Catalogs...</p>
+            <p className="text-white font-medium mb-2">Scanning All Retailers...</p>
             <p className="text-gray-500 text-sm text-center max-w-md">
-              Checking manufacturer databases for parts & pricing
+              Searching 20+ auto parts stores for live pricing, availability & images
             </p>
           </div>
         ) : error ? (
