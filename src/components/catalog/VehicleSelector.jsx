@@ -8,26 +8,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
-const years = Array.from({ length: 35 }, (_, i) => 2025 - i);
-const makes = ['Ford', 'Chevrolet', 'Toyota', 'Honda', 'Nissan', 'BMW', 'Mercedes-Benz', 'Volkswagen', 'Jeep', 'Ram'];
+import { vehicleYears, vehicleMakes, vehicleModels, vehicleEngines } from './VehicleData';
 
 export default function VehicleSelector({ onSelect, savedVehicles = [] }) {
   const [year, setYear] = useState('');
   const [make, setMake] = useState('');
   const [model, setModel] = useState('');
+  const [engine, setEngine] = useState('');
+
+  const availableModels = make ? (vehicleModels[make] || []) : [];
+  const availableEngines = model ? (vehicleEngines[model] || vehicleEngines['default']) : [];
 
   const handleApply = () => {
     if (year && make && model) {
-      onSelect({ year, make, model });
+      onSelect({ year, make, model, engine });
     }
+  };
+
+  const handleMakeChange = (newMake) => {
+    setMake(newMake);
+    setModel('');
+    setEngine('');
+  };
+
+  const handleModelChange = (newModel) => {
+    setModel(newModel);
+    setEngine('');
   };
 
   return (
     <div className="bg-[#1a1a1a] border border-[#333] rounded-xl p-4">
       <div className="flex items-center gap-2 mb-3">
         <Car className="w-5 h-5 text-orange-500" />
-        <h3 className="text-white font-semibold">Select Your Vehicle</h3>
+        <h3 className="text-white font-semibold">Select Your Vehicle for Exact Fit</h3>
       </div>
 
       {/* Saved Vehicles */}
@@ -49,13 +62,13 @@ export default function VehicleSelector({ onSelect, savedVehicles = [] }) {
       )}
 
       {/* Manual Selection */}
-      <div className="grid grid-cols-3 gap-2 mb-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
         <Select value={year} onValueChange={setYear}>
           <SelectTrigger className="bg-[#222] border-[#444] text-white">
             <SelectValue placeholder="Year" />
           </SelectTrigger>
-          <SelectContent>
-            {years.map((y) => (
+          <SelectContent className="max-h-60">
+            {vehicleYears.map((y) => (
               <SelectItem key={y} value={y.toString()}>
                 {y}
               </SelectItem>
@@ -63,12 +76,12 @@ export default function VehicleSelector({ onSelect, savedVehicles = [] }) {
           </SelectContent>
         </Select>
 
-        <Select value={make} onValueChange={setMake}>
+        <Select value={make} onValueChange={handleMakeChange}>
           <SelectTrigger className="bg-[#222] border-[#444] text-white">
             <SelectValue placeholder="Make" />
           </SelectTrigger>
-          <SelectContent>
-            {makes.map((m) => (
+          <SelectContent className="max-h-60">
+            {vehicleMakes.map((m) => (
               <SelectItem key={m} value={m}>
                 {m}
               </SelectItem>
@@ -76,15 +89,29 @@ export default function VehicleSelector({ onSelect, savedVehicles = [] }) {
           </SelectContent>
         </Select>
 
-        <Select value={model} onValueChange={setModel}>
+        <Select value={model} onValueChange={handleModelChange} disabled={!make}>
           <SelectTrigger className="bg-[#222] border-[#444] text-white">
             <SelectValue placeholder="Model" />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="F-150">F-150</SelectItem>
-            <SelectItem value="Mustang">Mustang</SelectItem>
-            <SelectItem value="Camry">Camry</SelectItem>
-            <SelectItem value="Civic">Civic</SelectItem>
+          <SelectContent className="max-h-60">
+            {availableModels.map((m) => (
+              <SelectItem key={m} value={m}>
+                {m}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select value={engine} onValueChange={setEngine} disabled={!model}>
+          <SelectTrigger className="bg-[#222] border-[#444] text-white">
+            <SelectValue placeholder="Engine" />
+          </SelectTrigger>
+          <SelectContent className="max-h-60">
+            {availableEngines.map((e) => (
+              <SelectItem key={e} value={e}>
+                {e}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
@@ -95,7 +122,7 @@ export default function VehicleSelector({ onSelect, savedVehicles = [] }) {
         className="w-full bg-orange-500 hover:bg-orange-600"
       >
         <Check className="w-4 h-4 mr-2" />
-        Apply Vehicle Filter
+        Apply Vehicle - Show Guaranteed Fit Parts
       </Button>
     </div>
   );

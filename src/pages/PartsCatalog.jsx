@@ -15,11 +15,22 @@ import {
   Droplets,
   Truck,
   Shield,
-  Loader2
+  Loader2,
+  Grid3x3,
+  List,
+  TrendingDown,
+  Star
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import CategoryCard from '@/components/catalog/CategoryCard';
 import ProductCard from '@/components/catalog/ProductCard';
 import ProductDetail from '@/components/catalog/ProductDetail';
@@ -36,6 +47,10 @@ export default function PartsCatalog() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [savedVehicles, setSavedVehicles] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [sortBy, setSortBy] = useState('relevance');
+  const [priceRange, setPriceRange] = useState('all');
+  const [brandFilter, setBrandFilter] = useState('all');
+  const [viewMode, setViewMode] = useState('grid');
 
   useEffect(() => {
     loadVehicles();
@@ -154,12 +169,12 @@ export default function PartsCatalog() {
     
     try {
       const vehicleInfo = vehicle 
-        ? `${vehicle.year} ${vehicle.make} ${vehicle.model}`
+        ? `${vehicle.year} ${vehicle.make} ${vehicle.model}${vehicle.engine ? ' ' + vehicle.engine : ''}`
         : 'universal fitment';
 
       const categoryName = category ? categories.find(c => c.id === category)?.name : 'automotive parts';
       
-      const prompt = `You are an expert automotive parts specialist with access to the following major retailers:
+      const prompt = `You are an AI-powered automotive parts specialist with EXACT FIT INTELLIGENCE. You have access to these major retailers:
 - RockAuto.com (best prices, huge inventory)
 - FCP Euro (lifetime warranty, premium parts)
 - Summit Racing (performance parts specialist)
@@ -172,11 +187,18 @@ export default function PartsCatalog() {
 - Amazon.com
 - eBay.com
 
-Search for: "${query || categoryName}"
-Vehicle: ${vehicleInfo}
-Category: ${categoryName}
+VEHICLE: ${vehicleInfo}
+CATEGORY: ${categoryName}
+SEARCH: "${query || categoryName}"
 
-Find 12 real products. CRITICAL: For EACH product, provide MULTIPLE retailer options with different prices so users can compare. Each product should have 3-5 price options from different retailers.
+CRITICAL REQUIREMENTS:
+1. Use AI to verify EXACT FIT for the vehicle (${vehicleInfo})
+2. Find 16 real products from the retailers above
+3. Each product MUST have 3-5 price options from different retailers
+4. Mark fitment as "exact" only if 100% confirmed for this specific vehicle
+5. Include real part numbers, accurate pricing ($15-$2000), and genuine brand names
+6. Provide high-quality automotive part images from unsplash
+7. Sort by best match/relevance first
 - Realistic product names
 - Accurate pricing ($20-$2000 range)
 - Proper brand names (Bosch, Denso, ACDelco, Motorcraft, etc.)
@@ -285,7 +307,34 @@ Return a JSON object with this structure:
         add_context_from_internet: true
       });
 
-      setProducts(response.products || []);
+      let productsData = response.products || [];
+      
+      // Apply filters and sorting
+      if (brandFilter !== 'all') {
+        productsData = productsData.filter(p => p.brand === brandFilter);
+      }
+      
+      if (priceRange !== 'all') {
+        const ranges = {
+          'under50': [0, 50],
+          '50to100': [50, 100],
+          '100to200': [100, 200],
+          'over200': [200, 99999]
+        };
+        const [min, max] = ranges[priceRange] || [0, 99999];
+        productsData = productsData.filter(p => p.price >= min && p.price <= max);
+      }
+      
+      // Sorting
+      if (sortBy === 'price-low') {
+        productsData.sort((a, b) => a.price - b.price);
+      } else if (sortBy === 'price-high') {
+        productsData.sort((a, b) => b.price - a.price);
+      } else if (sortBy === 'rating') {
+        productsData.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      }
+      
+      setProducts(productsData);
     } catch (err) {
       console.error(err);
       toast.error('Failed to load products');
@@ -309,7 +358,8 @@ Return a JSON object with this structure:
 
   const handleVehicleSelect = (vehicle) => {
     setSelectedVehicle(vehicle);
-    toast.success(`Vehicle set: ${vehicle.year} ${vehicle.make} ${vehicle.model}`);
+    const vehicleStr = `${vehicle.year} ${vehicle.make} ${vehicle.model}${vehicle.engine ? ' ' + vehicle.engine : ''}`;
+    toast.success(`✓ Vehicle set - Showing guaranteed fit parts for ${vehicleStr}`, { duration: 4000 });
     if (selectedCategory) {
       searchProducts(searchQuery, selectedCategory, vehicle);
     }
@@ -433,24 +483,122 @@ Return a JSON object with this structure:
             <p className="text-gray-400 text-sm">Checking inventory across 10+ retailers</p>
           </div>
         ) : (
-          /* Products Grid */
+          /* Products Grid with Filters */
           <div>
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-white font-bold text-xl mb-1">
-                  {categories.find(c => c.id === selectedCategory)?.name}
-                </h2>
-                <p className="text-gray-400 text-sm">{products.length} products found</p>
+            {/* Header with Filters */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-white font-bold text-2xl mb-1">
+                    {categories.find(c => c.id === selectedCategory)?.name}
+                  </h2>
+                  <p className="text-gray-400 text-sm">{products.length} products found</p>
+                </div>
+                
+                {/* View Toggle */}
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant={viewMode === 'grid' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('grid')}
+                    className={viewMode === 'grid' ? 'bg-orange-500' : 'border-[#444]'}
+                  >
+                    <Grid3x3 className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant={viewMode === 'list' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('list')}
+                    className={viewMode === 'list' ? 'bg-orange-500' : 'border-[#444]'}
+                  >
+                    <List className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Filters Bar - E-commerce Style */}
+              <div className="bg-[#1a1a1a] border border-[#333] rounded-xl p-4">
+                <div className="flex flex-wrap items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <SlidersHorizontal className="w-4 h-4 text-gray-400" />
+                    <span className="text-gray-400 text-sm font-medium">Filters:</span>
+                  </div>
+
+                  {/* Sort */}
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger className="w-40 bg-[#222] border-[#444] text-white">
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="relevance">Best Match</SelectItem>
+                      <SelectItem value="price-low">Price: Low to High</SelectItem>
+                      <SelectItem value="price-high">Price: High to Low</SelectItem>
+                      <SelectItem value="rating">Top Rated</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* Price Range */}
+                  <Select value={priceRange} onValueChange={setPriceRange}>
+                    <SelectTrigger className="w-40 bg-[#222] border-[#444] text-white">
+                      <SelectValue placeholder="Price" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Prices</SelectItem>
+                      <SelectItem value="under50">Under $50</SelectItem>
+                      <SelectItem value="50to100">$50 - $100</SelectItem>
+                      <SelectItem value="100to200">$100 - $200</SelectItem>
+                      <SelectItem value="over200">Over $200</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* Brand Filter */}
+                  <Select value={brandFilter} onValueChange={setBrandFilter}>
+                    <SelectTrigger className="w-40 bg-[#222] border-[#444] text-white">
+                      <SelectValue placeholder="Brand" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Brands</SelectItem>
+                      <SelectItem value="Bosch">Bosch</SelectItem>
+                      <SelectItem value="Denso">Denso</SelectItem>
+                      <SelectItem value="ACDelco">ACDelco</SelectItem>
+                      <SelectItem value="Motorcraft">Motorcraft</SelectItem>
+                      <SelectItem value="Monroe">Monroe</SelectItem>
+                      <SelectItem value="KYB">KYB</SelectItem>
+                      <SelectItem value="Moog">Moog</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* Active Filters Badge */}
+                  {(sortBy !== 'relevance' || priceRange !== 'all' || brandFilter !== 'all') && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setSortBy('relevance');
+                        setPriceRange('all');
+                        setBrandFilter('all');
+                      }}
+                      className="text-orange-500 hover:text-orange-400"
+                    >
+                      Clear Filters
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {/* Products Display */}
+            <div className={viewMode === 'grid' 
+              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5'
+              : 'space-y-4'
+            }>
               {products.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
                   onViewDetails={setSelectedProduct}
                   onSave={handleSaveProduct}
+                  viewMode={viewMode}
                 />
               ))}
             </div>

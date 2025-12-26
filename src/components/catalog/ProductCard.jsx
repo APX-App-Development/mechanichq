@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { retailerData } from './RetailerInfo';
 
-export default function ProductCard({ product, onViewDetails, onSave }) {
+export default function ProductCard({ product, onViewDetails, onSave, viewMode = 'grid' }) {
   const handleSave = () => {
     onSave(product);
     toast.success('Saved to your parts list!');
@@ -17,6 +17,84 @@ export default function ProductCard({ product, onViewDetails, onSave }) {
   
   const priceOptions = product.priceComparison?.length || 1;
   const hasBetterPrice = product.priceComparison && product.priceComparison.some(p => p.price < product.price);
+
+  if (viewMode === 'list') {
+    return (
+      <div className="bg-[#1a1a1a] border border-[#333] rounded-xl overflow-hidden hover:border-orange-500 transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/10 group">
+        <div className="flex gap-4 p-4">
+          {/* Image */}
+          <div className="w-48 h-48 flex-shrink-0 bg-[#222] relative overflow-hidden rounded-lg">
+            <img 
+              src={product.image}
+              alt={product.name}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              loading="lazy"
+            />
+            <button
+              onClick={handleSave}
+              className="absolute top-2 right-2 w-8 h-8 bg-black/50 hover:bg-orange-500 rounded-full flex items-center justify-center backdrop-blur-sm transition-colors"
+            >
+              <Heart className="w-4 h-4 text-white" />
+            </button>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 flex flex-col">
+            <p className="text-orange-500 text-sm font-semibold mb-1">{product.brand}</p>
+            <h3 className="text-white font-semibold text-lg mb-2">{product.name}</h3>
+            
+            {/* Badges */}
+            <div className="flex flex-wrap gap-2 mb-3">
+              {product.fitment === 'exact' && (
+                <Badge className="bg-green-500 text-white border-0">
+                  <CheckCircle className="w-3 h-3 mr-1" />
+                  Exact Fit
+                </Badge>
+              )}
+              {product.isOEM && (
+                <Badge className="bg-blue-500 text-white border-0">OEM</Badge>
+              )}
+            </div>
+
+            {/* Rating */}
+            {product.rating && (
+              <div className="flex items-center gap-1 mb-3">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <span key={i} className={i < Math.floor(product.rating) ? 'text-orange-500' : 'text-gray-600'}>★</span>
+                  ))}
+                </div>
+                <span className="text-gray-400 text-sm">({product.reviews || 0})</span>
+              </div>
+            )}
+
+            <div className="mt-auto flex items-center justify-between">
+              <div>
+                <p className="text-white font-bold text-2xl">${lowestPrice.toFixed(2)}</p>
+                <p className="text-gray-400 text-xs">{priceOptions} price options</p>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => onViewDetails(product)}
+                  variant="outline"
+                  className="border-[#444] text-white hover:bg-[#222]"
+                >
+                  View Details
+                </Button>
+                <Button
+                  onClick={() => window.open(product.buyUrl, '_blank')}
+                  className="bg-orange-500 hover:bg-orange-600"
+                >
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Buy Now
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#1a1a1a] border border-[#333] rounded-xl overflow-hidden hover:border-orange-500 transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/10 group">
