@@ -44,18 +44,6 @@ export default function Layout({ children }) {
             padding-top: env(safe-area-inset-top);
           }
         }
-
-        /* Light mode overrides */
-        html:not(.dark) .bg-\\[\\#111\\] { background-color: #f5f5f5 !important; }
-        html:not(.dark) .bg-\\[\\#1a1a1a\\] { background-color: #ffffff !important; }
-        html:not(.dark) .bg-\\[\\#222\\] { background-color: #f0f0f0 !important; }
-        html:not(.dark) .bg-\\[\\#0a0a0a\\] { background-color: #e5e5e5 !important; }
-        html:not(.dark) .text-white { color: #111 !important; }
-        html:not(.dark) .text-gray-400 { color: #666 !important; }
-        html:not(.dark) .text-gray-500 { color: #888 !important; }
-        html:not(.dark) .border-\\[\\#333\\] { border-color: #ddd !important; }
-        html:not(.dark) .border-\\[\\#444\\] { border-color: #ccc !important; }
-        html:not(.dark) .border-\\[\\#222\\] { border-color: #eee !important; }
       `}</style>
       
       <Header />
