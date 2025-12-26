@@ -6,6 +6,7 @@ import PartsList from './pages/PartsList';
 import SavedParts from './pages/SavedParts';
 import SearchHistory from './pages/SearchHistory';
 import SearchResults from './pages/SearchResults';
+import DevPanel from './pages/DevPanel';
 import __Layout from './Layout.jsx';
 
 
@@ -18,6 +19,7 @@ export const PAGES = {
     "SavedParts": SavedParts,
     "SearchHistory": SearchHistory,
     "SearchResults": SearchResults,
+    "DevPanel": DevPanel,
 }
 
 export const pagesConfig = {

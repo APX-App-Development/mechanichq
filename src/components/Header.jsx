@@ -34,14 +34,33 @@ export default function Header() {
     }
   }, [darkMode]);
 
+  const getFeatureFlags = () => {
+    const stored = localStorage.getItem('featureFlags');
+    return stored ? JSON.parse(stored) : {
+      catalog: false,
+      myGarage: true,
+      myJobs: true,
+      partsList: true,
+      searchHistory: true,
+      home: true
+    };
+  };
+
+  const featureFlags = getFeatureFlags();
+
   const navItems = [
-    { name: 'Home', icon: Home, page: 'Home', protected: false },
-    { name: 'Catalog', icon: BookOpen, page: 'PartsCatalog', protected: true },
-    { name: 'My Garage', icon: Car, page: 'MyGarage', protected: false },
-    { name: 'My Jobs', icon: Briefcase, page: 'MyJobs', protected: false },
-    { name: 'Parts List', icon: ShoppingCart, page: 'PartsList', protected: false },
-    { name: 'History', icon: History, page: 'SearchHistory', protected: false },
+    { name: 'Home', icon: Home, page: 'Home', protected: !featureFlags.home },
+    { name: 'Catalog', icon: BookOpen, page: 'PartsCatalog', protected: !featureFlags.catalog },
+    { name: 'My Garage', icon: Car, page: 'MyGarage', protected: !featureFlags.myGarage },
+    { name: 'My Jobs', icon: Briefcase, page: 'MyJobs', protected: !featureFlags.myJobs },
+    { name: 'Parts List', icon: ShoppingCart, page: 'PartsList', protected: !featureFlags.partsList },
+    { name: 'History', icon: History, page: 'SearchHistory', protected: !featureFlags.searchHistory },
   ];
+
+  // Add Dev Panel to nav when in dev mode
+  if (isDevMode) {
+    navItems.push({ name: 'Dev Panel', icon: Code, page: 'DevPanel', protected: false });
+  }
 
   const handleLogoClick = () => {
     setDevClickCount(prev => prev + 1);
