@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Header from '@/components/Header';
 import { DevModeProvider } from '@/components/DevModeProvider';
 
 export default function Layout({ children }) {
-  const [darkMode, setDarkMode] = useState(true);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('darkMode');
-    setDarkMode(stored !== 'false');
-  }, []);
-
   return (
     <DevModeProvider>
-    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${darkMode ? 'bg-[#111]' : 'bg-gray-100'}`}>
+    <div className="min-h-screen flex flex-col transition-colors duration-300 bg-[#111]">
       <style>{`
         :root {
           --primary: #f97316;
@@ -72,12 +65,12 @@ export default function Layout({ children }) {
       </main>
       
       {/* Footer */}
-      <footer className={`border-t py-6 ${darkMode ? 'bg-[#0a0a0a] border-[#222]' : 'bg-gray-200 border-gray-300'}`}>
+      <footer className="border-t py-6 bg-[#0a0a0a] border-[#222]">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>
+          <p className="text-sm text-gray-500">
             © {new Date().getFullYear()} MechanicHQ. Find genuine OEM parts instantly.
           </p>
-          <p className={`text-xs mt-1 ${darkMode ? 'text-gray-600' : 'text-gray-500'}`}>
+          <p className="text-xs mt-1 text-gray-600">
             Powered by AI • Not affiliated with any vehicle manufacturer
           </p>
         </div>

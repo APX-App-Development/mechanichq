@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Menu, X, Car, Wrench, BookmarkCheck, History, Home, ShoppingCart, Moon, Sun, Briefcase, BookOpen, Code } from 'lucide-react';
+import { Menu, X, Car, Wrench, BookmarkCheck, History, Home, ShoppingCart, Briefcase, BookOpen, Code } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -16,23 +16,6 @@ export default function Header() {
   const [comingSoonFeature, setComingSoonFeature] = useState('');
   const [devClickCount, setDevClickCount] = useState(0);
   const { isDevMode, disableDevMode } = useDevMode();
-  const [darkMode, setDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('darkMode') !== 'false';
-    }
-    return true;
-  });
-
-  useEffect(() => {
-    localStorage.setItem('darkMode', darkMode.toString());
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      document.body.style.backgroundColor = '#111';
-    } else {
-      document.documentElement.classList.remove('dark');
-      document.body.style.backgroundColor = '#f5f5f5';
-    }
-  }, [darkMode]);
 
   const getFeatureFlags = () => {
     const stored = localStorage.getItem('featureFlags');
@@ -119,9 +102,9 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Theme Toggle & Dev Mode */}
-          <div className="hidden md:flex items-center gap-2">
-            {isDevMode && (
+          {/* Dev Mode */}
+          {isDevMode && (
+            <div className="hidden md:flex items-center gap-2">
               <Button
                 onClick={disableDevMode}
                 variant="outline"
@@ -130,16 +113,8 @@ export default function Header() {
               >
                 Exit Dev
               </Button>
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setDarkMode(!darkMode)}
-              className="text-gray-400 hover:text-white hover:bg-[#222]"
-            >
-              {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </Button>
-          </div>
+            </div>
+          )}
 
           {/* Mobile Menu */}
           <Sheet open={open} onOpenChange={setOpen}>
@@ -166,15 +141,6 @@ export default function Header() {
                     <span className="font-medium">{item.name}</span>
                   </Link>
                 ))}
-                
-                {/* Theme Toggle Mobile */}
-                <button
-                  onClick={() => setDarkMode(!darkMode)}
-                  className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-[#222] rounded-lg transition-all duration-200 mt-4 border-t border-[#333] pt-6"
-                >
-                  {darkMode ? <Sun className="w-5 h-5 text-orange-500" /> : <Moon className="w-5 h-5 text-orange-500" />}
-                  <span className="font-medium">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
-                </button>
               </div>
             </SheetContent>
           </Sheet>
