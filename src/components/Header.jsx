@@ -130,6 +130,23 @@ export default function Header() {
         onOpenChange={setShowComingSoon}
         featureName={comingSoonFeature}
       />
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-[#333] z-50 pb-safe">
+        <div className="flex items-center justify-around">
+          {navItems.slice(0, 5).map((item) => (
+            <Link
+              key={item.name}
+              to={createPageUrl(item.page)}
+              onClick={(e) => handleNavClick(e, item)}
+              className="flex flex-col items-center gap-1 py-2 px-2 text-gray-400 hover:text-orange-500 active:text-orange-600 transition-colors min-w-[60px]"
+            >
+              <item.icon className="w-5 h-5" />
+              <span className="text-[10px] font-medium">{item.name}</span>
+            </Link>
+          ))}
+        </div>
+      </nav>
     </header>
   );
 }
