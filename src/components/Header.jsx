@@ -116,34 +116,8 @@ export default function Header() {
             </div>
           )}
 
-          {/* Mobile Menu */}
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon" className="text-white hover:bg-[#222]">
-                <Menu className="w-6 h-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="bg-[#111] border-[#333] w-72">
-              <div className="flex flex-col gap-2 mt-8">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={createPageUrl(item.page)}
-                    onClick={(e) => {
-                      handleNavClick(e, item);
-                      if (!item.protected || isDevMode) {
-                        setOpen(false);
-                      }
-                    }}
-                    className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-[#222] rounded-lg transition-all duration-200"
-                  >
-                    <item.icon className="w-5 h-5 text-orange-500" />
-                    <span className="font-medium">{item.name}</span>
-                  </Link>
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
+          {/* Mobile bottom nav spacer */}
+          <div className="md:hidden w-10" />
         </div>
       </div>
 
