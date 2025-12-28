@@ -86,16 +86,14 @@ export default function MyGarage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#111] px-4 py-8">
+    <div className="min-h-screen bg-black px-4 py-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <Car className="w-7 h-7 text-orange-500" />
-              My Garage
-            </h1>
-            <p className="text-gray-400 mt-1">Save your vehicles for quick part searches</p>
+            <h1 className="text-[#FF6B35] font-bold text-xl mb-2">My Garage</h1>
+            <h2 className="text-white font-semibold text-2xl mb-1">My Vehicles</h2>
+            <p className="text-gray-500 text-sm">Manage your vehicle fleet</p>
           </div>
           
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

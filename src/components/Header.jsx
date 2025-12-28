@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Menu, X, Car, Wrench, BookmarkCheck, History, Home, ShoppingCart, Briefcase, BookOpen, Code } from 'lucide-react';
+import { Menu, X, Car, Wrench, BookmarkCheck, History, Home, ShoppingCart, Briefcase, BookOpen, Code, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -32,12 +32,11 @@ export default function Header() {
   const featureFlags = getFeatureFlags();
 
   const navItems = [
-    { name: 'Home', icon: Home, page: 'Home', protected: !featureFlags.home },
-    { name: 'Catalog', icon: BookOpen, page: 'PartsCatalog', protected: !featureFlags.catalog },
+    { name: 'MechanicHQ', icon: Home, page: 'Home', protected: !featureFlags.home },
     { name: 'My Garage', icon: Car, page: 'MyGarage', protected: !featureFlags.myGarage },
+    { name: 'Quick Jobs', icon: Wrench, page: 'QuickJobs', protected: false },
     { name: 'My Jobs', icon: Briefcase, page: 'MyJobs', protected: !featureFlags.myJobs },
-    { name: 'Parts List', icon: ShoppingCart, page: 'PartsList', protected: !featureFlags.partsList },
-    { name: 'History', icon: History, page: 'SearchHistory', protected: !featureFlags.searchHistory },
+    { name: 'Profile', icon: Menu, page: 'Profile', protected: false },
   ];
 
   // Add Dev Panel to nav when in dev mode
@@ -124,21 +123,21 @@ export default function Header() {
       />
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-[#1a1a1a] z-50 pb-safe">
-        <div className="flex items-center justify-around py-2">
-          {navItems.slice(0, 5).map((item) => {
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-[#1a1a1a] z-50">
+        <div className="flex items-center justify-around h-16">
+          {navItems.map((item) => {
             const isActive = window.location.pathname.includes(item.page);
             return (
               <Link
                 key={item.name}
                 to={createPageUrl(item.page)}
                 onClick={(e) => handleNavClick(e, item)}
-                className={`flex flex-col items-center gap-1 px-2 transition-colors min-w-[60px] ${
+                className={`flex flex-col items-center justify-center gap-1 flex-1 h-full transition-colors ${
                   isActive ? 'text-[#FF6B35]' : 'text-gray-600'
                 }`}
               >
-                <item.icon className="w-5 h-5" />
-                <span className="text-[10px] font-medium">{item.name}</span>
+                <item.icon className="w-5 h-5" strokeWidth={2} />
+                <span className="text-[10px] font-normal">{item.name}</span>
               </Link>
             );
           })}

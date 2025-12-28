@@ -8,6 +8,8 @@ import SavedParts from './pages/SavedParts';
 import SearchHistory from './pages/SearchHistory';
 import PartsCatalog from './pages/PartsCatalog';
 import SearchResults from './pages/SearchResults';
+import QuickJobs from './pages/QuickJobs';
+import Profile from './pages/Profile';
 import __Layout from './Layout.jsx';
 
 
@@ -22,6 +24,8 @@ export const PAGES = {
     "SearchHistory": SearchHistory,
     "PartsCatalog": PartsCatalog,
     "SearchResults": SearchResults,
+    "QuickJobs": QuickJobs,
+    "Profile": Profile,
 }
 
 export const pagesConfig = {

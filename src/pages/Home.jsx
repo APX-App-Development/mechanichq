@@ -61,7 +61,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-black">
       {/* Hero Section */}
       <section className="relative min-h-[85vh] flex flex-col justify-center overflow-hidden">
         {/* Background */}
@@ -71,23 +71,19 @@ export default function Home() {
             backgroundImage: 'url(https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=1920&q=80)'
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-[#111]/98 via-[#111]/90 to-[#111]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/98 via-black/90 to-black" />
         </div>
 
         {/* Content */}
         <div className="relative z-10 w-full max-w-6xl mx-auto px-4 py-8">
           {/* Title */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 rounded-full px-4 py-1.5 mb-5">
-              <Zap className="w-4 h-4 text-orange-500" />
-              <span className="text-orange-500 text-sm font-medium">Power For The DIY Mechanic</span>
-            </div>
-            
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
-              Find OEM Parts <span className="text-orange-500">Instantly</span>
-            </h1>
-            <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
-              Get exact OEM part numbers, MSRP prices, supersession info, purchase links and install instructions — all in one search.
+            <h1 className="text-[#FF6B35] font-bold text-xl mb-3">MechanicHQ</h1>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
+              Find OEM Parts Instantly
+            </h2>
+            <p className="text-gray-500 text-base md:text-lg max-w-2xl mx-auto">
+              AI-powered search for genuine parts with pricing & guides
             </p>
           </div>
 
@@ -174,7 +170,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 px-4 bg-gradient-to-b from-[#111] to-[#0a0a0a]">
+      <section className="py-16 px-4 bg-gradient-to-b from-black to-black">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">

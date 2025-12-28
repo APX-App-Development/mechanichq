@@ -111,14 +111,12 @@ Return recommendations as a JSON array of parts with reasoning.`,
   };
 
   return (
-    <div className="min-h-screen bg-[#111] px-4 py-8">
+    <div className="min-h-screen bg-black px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Briefcase className="w-7 h-7 text-orange-500" />
-            My Jobs
-          </h1>
-          <p className="text-gray-400 mt-1">Track your repair projects and parts lists</p>
+          <h1 className="text-[#FF6B35] font-bold text-xl mb-2">My Jobs</h1>
+          <h2 className="text-white font-semibold text-2xl mb-1">Repair Jobs</h2>
+          <p className="text-gray-500 text-sm">Track parts and organize your repairs</p>
         </div>
 
         {loading ? (
@@ -127,9 +125,9 @@ Return recommendations as a JSON array of parts with reasoning.`,
           </div>
         ) : jobs.length === 0 ? (
           <div className="text-center py-20">
-            <Briefcase className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <h3 className="text-white font-medium text-lg mb-2">No jobs yet</h3>
-            <p className="text-gray-400 text-sm">Save parts from search results to create a job</p>
+            <Briefcase className="w-24 h-24 text-gray-700 mx-auto mb-6" />
+            <h3 className="text-white font-medium text-xl mb-2">No Jobs Yet</h3>
+            <p className="text-gray-500 text-sm max-w-xs mx-auto">Create your first job to organize parts and track repair progress</p>
           </div>
         ) : (
           <div className="space-y-4">
