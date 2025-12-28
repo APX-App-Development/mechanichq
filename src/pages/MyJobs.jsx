@@ -111,172 +111,79 @@ Return recommendations as a JSON array of parts with reasoning.`,
   };
 
   return (
-    <div className="min-h-screen bg-[#111] px-4 py-8">
+    <div className="min-h-screen bg-black px-4 py-6">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Briefcase className="w-7 h-7 text-orange-500" />
-            My Jobs
-          </h1>
-          <p className="text-gray-400 mt-1">Track your repair projects and parts lists</p>
+        <div className="mb-6">
+          <h1 className="text-[#FF6B35] text-lg font-semibold mb-4">My Jobs</h1>
+          <div className="mb-6">
+            <h2 className="text-white text-xl font-bold mb-1">Repair Jobs</h2>
+            <p className="text-gray-500 text-sm">Track parts and organize your repairs</p>
+          </div>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
+            <Loader2 className="w-8 h-8 text-[#FF6B35] animate-spin" />
           </div>
         ) : jobs.length === 0 ? (
           <div className="text-center py-20">
-            <Briefcase className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <h3 className="text-white font-medium text-lg mb-2">No jobs yet</h3>
-            <p className="text-gray-400 text-sm">Save parts from search results to create a job</p>
+            <div className="w-24 h-24 bg-[#1a1a1a] rounded-full flex items-center justify-center mx-auto mb-6">
+              <Briefcase className="w-12 h-12 text-gray-600" />
+            </div>
+            <h3 className="text-white font-bold text-xl mb-3">No Jobs Yet</h3>
+            <p className="text-gray-500 text-sm mb-8 max-w-sm mx-auto">
+              Create your first job to organize parts and track repair progress
+            </p>
+            <Button className="bg-[#FF6B35] hover:bg-[#E85D2A] text-white rounded-xl px-6">
+              <Plus className="w-4 h-4 mr-2" />
+              Create Job
+            </Button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {jobs.map((job) => {
               const StatusIcon = statusIcons[job.status];
+              const priorityColors = {
+                'Easy': 'bg-green-500 text-white',
+                'Medium': 'bg-[#FF6B35] text-white',
+                'Hard': 'bg-red-500 text-white'
+              };
               return (
-                <Card key={job.id} className="bg-[#1a1a1a] border-[#333] overflow-hidden">
-                  <CardContent className="p-5">
-                    <div className="flex items-start justify-between gap-4 mb-4">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge className={statusColors[job.status]}>
-                            <StatusIcon className="w-3 h-3 mr-1" />
-                            {job.status?.replace('_', ' ')}
-                          </Badge>
-                        </div>
-                        <h3 className="text-white font-semibold text-lg">{job.name}</h3>
-                        {job.vehicle_info && (
-                          <div className="flex items-center gap-2 mt-1">
-                            <Car className="w-4 h-4 text-gray-500" />
-                            <span className="text-gray-400 text-sm">{job.vehicle_info}</span>
-                          </div>
-                        )}
-                        <p className="text-gray-500 text-xs mt-2">
-                          Created {format(new Date(job.created_date), 'MMM d, yyyy')}
-                        </p>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDelete(job.id)}
-                        className="text-gray-500 hover:text-red-500 hover:bg-red-500/10"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                <div key={job.id} className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-4">
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-12 h-12 bg-[#FF6B35] rounded-2xl flex items-center justify-center flex-shrink-0">
+                      <Wrench className="w-6 h-6 text-white" />
                     </div>
-
-                    {/* Parts List */}
-                    {job.parts && job.parts.length > 0 && (
-                      <div className="bg-[#222] rounded-xl p-4 mb-4">
-                        <p className="text-gray-400 text-xs uppercase tracking-wide mb-3">
-                          Parts ({job.parts.length})
-                        </p>
-                        <div className="space-y-2">
-                          {job.parts.map((part, idx) => (
-                            <div key={idx} className="flex items-center justify-between">
-                              <div className="flex-1 min-w-0">
-                                <p className="text-white text-sm truncate">{part.part_name}</p>
-                                <p className="text-gray-500 text-xs font-mono">#{part.oem_part_number}</p>
-                              </div>
-                              <span className="text-orange-500 font-medium">
-                                ${part.msrp_price?.toFixed(2)}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="flex items-center justify-between mt-4 pt-4 border-t border-[#333]">
-                          <span className="text-gray-400 text-sm flex items-center gap-1">
-                            <DollarSign className="w-4 h-4" />
-                            Estimated Total
-                          </span>
-                          <span className="text-white font-bold text-lg">
-                            ${job.estimated_cost?.toFixed(2) || '0.00'}
-                          </span>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* AI Recommendations */}
-                    {job.parts && job.parts.length > 0 && (
-                      <div className="mb-4">
-                        {!recommendations[job.id] && !loadingRecs[job.id] ? (
-                          <Button
-                            onClick={() => getRecommendations(job)}
-                            variant="outline"
-                            className="w-full border-[#444] text-white hover:bg-[#222] hover:border-orange-500"
-                          >
-                            <Sparkles className="w-4 h-4 mr-2 text-orange-500" />
-                            Get AI Part Recommendations
-                          </Button>
-                        ) : loadingRecs[job.id] ? (
-                          <div className="bg-[#222] rounded-xl p-4 flex items-center justify-center">
-                            <Loader2 className="w-5 h-5 text-orange-500 animate-spin mr-2" />
-                            <span className="text-gray-400 text-sm">Analyzing parts list...</span>
-                          </div>
-                        ) : recommendations[job.id]?.length > 0 ? (
-                          <div className="bg-gradient-to-br from-orange-500/10 to-orange-500/5 border border-orange-500/30 rounded-xl p-4">
-                            <div className="flex items-center gap-2 mb-3">
-                              <Sparkles className="w-4 h-4 text-orange-500" />
-                              <span className="text-white font-medium text-sm">AI Recommended Parts</span>
-                            </div>
-                            <div className="space-y-2">
-                              {recommendations[job.id].map((rec, idx) => (
-                                <button
-                                  key={idx}
-                                  onClick={() => handleSearchRecommendation(rec.part_name)}
-                                  className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg p-3 text-left hover:border-orange-500 transition-all group"
-                                >
-                                  <div className="flex items-start justify-between gap-2">
-                                    <div className="flex-1">
-                                      <div className="flex items-center gap-2 mb-1">
-                                        <p className="text-white text-sm font-medium group-hover:text-orange-500 transition-colors">
-                                          {rec.part_name}
-                                        </p>
-                                        <Badge className={`text-xs ${
-                                          rec.priority === 'essential' ? 'bg-red-500/20 text-red-400' :
-                                          rec.priority === 'recommended' ? 'bg-orange-500/20 text-orange-400' :
-                                          'bg-blue-500/20 text-blue-400'
-                                        }`}>
-                                          {rec.priority}
-                                        </Badge>
-                                      </div>
-                                      <p className="text-gray-400 text-xs">{rec.reason}</p>
-                                    </div>
-                                    <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-orange-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" />
-                                  </div>
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        ) : null}
-                      </div>
-                    )}
-
-                    {/* Status Actions */}
-                    <div className="flex gap-2 flex-wrap">
-                      {job.status === 'planned' && (
-                        <Button
-                          onClick={() => handleStatusChange(job, 'in_progress')}
-                          className="bg-amber-500 hover:bg-amber-600 text-black"
-                        >
-                          <Play className="w-4 h-4 mr-2" />
-                          Start Job
-                        </Button>
-                      )}
-                      {job.status === 'in_progress' && (
-                        <Button
-                          onClick={() => handleStatusChange(job, 'completed')}
-                          className="bg-green-500 hover:bg-green-600 text-black"
-                        >
-                          <CheckCircle className="w-4 h-4 mr-2" />
-                          Mark Complete
-                        </Button>
-                      )}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-white font-bold text-base mb-1">{job.name}</h3>
+                      <p className="text-gray-500 text-xs">{job.vehicle_info || 'Replace engine oil and oil filter'}</p>
                     </div>
-                  </CardContent>
-                </Card>
+                    <ChevronRight className="w-5 h-5 text-gray-600" />
+                  </div>
+                  <div className="flex items-center gap-3 text-xs">
+                    <div className="flex items-center gap-1 text-gray-500">
+                      <Clock className="w-3 h-3" />
+                      <span>30-45 min</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-gray-500">
+                      <DollarSign className="w-3 h-3" />
+                      <span>${job.estimated_cost?.toFixed(0) || '30'}-50</span>
+                    </div>
+                    <Badge className="bg-green-500 text-white text-xs px-2 py-0.5 rounded-md">
+                      Easy
+                    </Badge>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDelete(job.id)}
+                    className="absolute top-4 right-4 text-gray-600 hover:text-red-500"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+
+
               );
             })}
           </div>
