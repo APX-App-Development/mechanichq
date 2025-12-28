@@ -86,14 +86,16 @@ export default function MyGarage() {
   };
 
   return (
-    <div className="min-h-screen bg-black px-4 py-6">
+    <div className="min-h-screen bg-[#111] px-4 py-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-[#FF6B35] text-lg font-semibold mb-4">My Garage</h1>
-          <div className="mb-6">
-            <h2 className="text-white text-xl font-bold mb-1">My Vehicles</h2>
-            <p className="text-gray-500 text-sm">Manage your vehicle fleet</p>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+              <Car className="w-7 h-7 text-orange-500" />
+              My Garage
+            </h1>
+            <p className="text-gray-400 mt-1">Save your vehicles for quick part searches</p>
           </div>
           
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -177,67 +179,59 @@ export default function MyGarage() {
         {/* Vehicle List */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 text-[#FF6B35] animate-spin" />
+            <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
           </div>
         ) : vehicles.length === 0 ? (
           <div className="text-center py-20">
-            <div className="w-24 h-24 bg-[#1a1a1a] rounded-full flex items-center justify-center mx-auto mb-6">
-              <Car className="w-12 h-12 text-gray-600" />
-            </div>
-            <h3 className="text-white font-bold text-xl mb-3">No Vehicles Yet</h3>
-            <p className="text-gray-500 text-sm mb-8 max-w-sm mx-auto">
-              Create your first vehicle to organize parts and track repair progress
-            </p>
-            <Button onClick={() => setDialogOpen(true)} className="bg-[#FF6B35] hover:bg-[#E85D2A] text-white rounded-xl px-6">
+            <Car className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+            <h3 className="text-white font-medium text-lg mb-2">No vehicles in your garage</h3>
+            <p className="text-gray-400 text-sm mb-6">Add your first vehicle to quickly search for parts</p>
+            <Button onClick={() => setDialogOpen(true)} className="bg-orange-500 hover:bg-orange-600">
               <Plus className="w-4 h-4 mr-2" />
-              Add Vehicle
+              Add Your First Vehicle
             </Button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-5">
             {vehicles.map((vehicle, idx) => (
-              <div 
-                key={vehicle.id}
-                className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-4 flex items-center gap-4"
+              <Card 
+                key={vehicle.id} 
+                className="bg-[#1a1a1a] border-[#333] hover:border-orange-500/50 transition-all duration-200 card-hover rounded-2xl animate-fade-in-up"
+                style={{ animationDelay: `${idx * 80}ms`, animationFillMode: 'both' }}
               >
-                <div className="w-14 h-14 bg-[#FF6B35] rounded-2xl flex items-center justify-center flex-shrink-0">
-                  <Car className="w-7 h-7 text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between mb-2">
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between mb-4">
                     <div>
-                      <p className="text-xs text-gray-500 mb-0.5">{vehicle.year}</p>
-                      <h3 className="text-white font-bold text-base">
-                        {vehicle.make} {vehicle.model}
+                      <h3 className="text-white font-semibold text-lg">
+                        {vehicle.year} {vehicle.make} {vehicle.model}
                       </h3>
-                      <p className="text-gray-500 text-xs mt-0.5">{vehicle.engine || '45,230 miles'}</p>
+                      {vehicle.nickname && (
+                        <p className="text-orange-500 text-sm font-medium mt-0.5">{vehicle.nickname}</p>
+                      )}
+                      {vehicle.engine && (
+                        <p className="text-gray-400 text-sm mt-1">{vehicle.engine}</p>
+                      )}
                     </div>
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDelete(vehicle.id)}
+                      className="text-gray-500 hover:text-red-500 hover:bg-red-500/10"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
-                  {vehicle.nickname && (
-                    <div className="inline-block bg-[#FF6B35] px-3 py-1 rounded-md text-white text-xs font-semibold">
-                      {vehicle.nickname}
-                    </div>
-                  )}
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleDelete(vehicle.id)}
-                  className="text-gray-600 hover:text-red-500"
-                >
-                  <Trash2 className="w-5 h-5" />
-                </Button>
-              </div>
+                  
+                  <Button
+                    onClick={() => handleSearchParts(vehicle)}
+                    className="w-full h-12 tap-target bg-[#222] hover:bg-[#333] text-white border border-[#444] rounded-xl font-semibold transition-all duration-200 active:scale-[0.98]"
+                  >
+                    <Search className="w-4 h-4 mr-2" />
+                    Search Parts
+                  </Button>
+                </CardContent>
+              </Card>
             ))}
-            
-            <button
-              onClick={() => setDialogOpen(true)}
-              className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-6 flex items-center justify-center gap-2 active:bg-[#222]"
-            >
-              <Plus className="w-5 h-5 text-[#FF6B35]" />
-              <span className="text-[#FF6B35] font-semibold">Add Vehicle</span>
-            </button>
           </div>
         )}
       </div>
