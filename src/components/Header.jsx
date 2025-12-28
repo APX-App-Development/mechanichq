@@ -63,29 +63,22 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-[#111] border-b border-[#333] sticky top-0 z-50">
+    <header className="bg-black border-b border-[#1a1a1a] sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <button onClick={handleLogoClick} className="flex items-center gap-3">
-            <div className="relative">
-              <div className="bg-gradient-to-br from-slate-500 to-slate-600 p-2.5 rounded-xl shadow-lg">
-                <Wrench className="w-6 h-6 text-white" />
-              </div>
-              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-orange-500 rounded-full border-2 border-[#111]"></div>
-            </div>
             <div className="flex items-baseline gap-1">
-              <span className="text-slate-200 font-bold text-xl tracking-tight">Mechanic</span>
-              <span className="text-orange-500 font-bold text-xl">HQ</span>
+              <span className="text-[#FF6B35] font-bold text-xl tracking-tight">MechanicHQ</span>
               {isDevMode && (
-                <Badge className="bg-orange-500 text-white text-xs ml-2">
+                <Badge className="bg-[#FF6B35] text-white text-xs ml-2">
                   <Code className="w-3 h-3 mr-1" />
                   DEV
                 </Badge>
               )}
             </div>
           </button>
-          <span className="hidden sm:block text-gray-500 text-xs ml-3">OEM Parts + Pro Instructions in Seconds</span>
+          <span className="hidden sm:block text-gray-600 text-xs ml-3">OEM Parts + Pro Instructions in Seconds</span>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1">
@@ -94,7 +87,7 @@ export default function Header() {
                 key={item.name}
                 to={createPageUrl(item.page)}
                 onClick={(e) => handleNavClick(e, item)}
-                className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-white hover:bg-[#222] rounded-lg transition-all duration-200"
+                className="flex items-center gap-2 px-4 py-2 text-gray-500 hover:text-white hover:bg-[#1a1a1a] rounded-lg transition-all duration-200"
               >
                 <item.icon className="w-4 h-4" />
                 <span className="text-sm font-medium">{item.name}</span>
@@ -109,7 +102,7 @@ export default function Header() {
                 onClick={disableDevMode}
                 variant="outline"
                 size="sm"
-                className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+                className="border-[#FF6B35] text-[#FF6B35] hover:bg-[#FF6B35] hover:text-white"
               >
                 Exit Dev
               </Button>
@@ -121,8 +114,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Orange accent line */}
-      <div className="h-1 bg-gradient-to-r from-orange-600 via-orange-500 to-orange-600" />
+
 
       <DevSecretDialog open={showDevDialog} onOpenChange={setShowDevDialog} />
       <ComingSoonDialog 
@@ -132,19 +124,24 @@ export default function Header() {
       />
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-[#333] z-50 pb-safe">
-        <div className="flex items-center justify-around">
-          {navItems.slice(0, 5).map((item) => (
-            <Link
-              key={item.name}
-              to={createPageUrl(item.page)}
-              onClick={(e) => handleNavClick(e, item)}
-              className="flex flex-col items-center gap-1 py-2 px-2 text-gray-400 hover:text-orange-500 active:text-orange-600 transition-colors min-w-[60px]"
-            >
-              <item.icon className="w-5 h-5" />
-              <span className="text-[10px] font-medium">{item.name}</span>
-            </Link>
-          ))}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-[#1a1a1a] z-50 pb-safe">
+        <div className="flex items-center justify-around py-2">
+          {navItems.slice(0, 5).map((item) => {
+            const isActive = window.location.pathname.includes(item.page);
+            return (
+              <Link
+                key={item.name}
+                to={createPageUrl(item.page)}
+                onClick={(e) => handleNavClick(e, item)}
+                className={`flex flex-col items-center gap-1 px-2 transition-colors min-w-[60px] ${
+                  isActive ? 'text-[#FF6B35]' : 'text-gray-600'
+                }`}
+              >
+                <item.icon className="w-5 h-5" />
+                <span className="text-[10px] font-medium">{item.name}</span>
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </header>
