@@ -62,11 +62,6 @@ export default function Home() {
 
   return (
     <div className="flex flex-col bg-black min-h-screen">
-      {/* Page Title */}
-      <div className="px-4 pt-6 pb-2">
-        <h1 className="text-[#FF6B35] text-lg font-semibold">MechanicHQ</h1>
-      </div>
-
       {/* Hero Section */}
       <section className="flex flex-col px-4 py-6">
         {/* Content */}
