@@ -3,13 +3,13 @@ import DevPanel from './pages/DevPanel';
 import Home from './pages/Home';
 import MyGarage from './pages/MyGarage';
 import MyJobs from './pages/MyJobs';
+import PartsCatalog from './pages/PartsCatalog';
 import PartsList from './pages/PartsList';
+import Profile from './pages/Profile';
+import QuickJobs from './pages/QuickJobs';
 import SavedParts from './pages/SavedParts';
 import SearchHistory from './pages/SearchHistory';
-import PartsCatalog from './pages/PartsCatalog';
 import SearchResults from './pages/SearchResults';
-import QuickJobs from './pages/QuickJobs';
-import Profile from './pages/Profile';
 import __Layout from './Layout.jsx';
 
 
@@ -19,13 +19,13 @@ export const PAGES = {
     "Home": Home,
     "MyGarage": MyGarage,
     "MyJobs": MyJobs,
+    "PartsCatalog": PartsCatalog,
     "PartsList": PartsList,
+    "Profile": Profile,
+    "QuickJobs": QuickJobs,
     "SavedParts": SavedParts,
     "SearchHistory": SearchHistory,
-    "PartsCatalog": PartsCatalog,
     "SearchResults": SearchResults,
-    "QuickJobs": QuickJobs,
-    "Profile": Profile,
 }
 
 export const pagesConfig = {

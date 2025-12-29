@@ -46,6 +46,11 @@ export default function Home() {
     navigate(createPageUrl('SearchResults') + `?q=${encodeURIComponent(search.query)}`);
   };
 
+  const handleScanVIN = () => {
+    // TODO: Implement VIN scanner
+    alert('VIN Scanner coming soon! For now, use the search bar or select your vehicle from My Garage.');
+  };
+
   return (
     <div className="min-h-screen bg-black px-4 py-8">
       <div className="max-w-2xl mx-auto">
@@ -66,16 +71,17 @@ export default function Home() {
               className="bg-[#1a1a1a] border-[#2a2a2a] text-white pl-12 h-14 rounded-xl"
             />
             <Button
-              type="button"
+              type="submit"
               className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#FF6B35] hover:bg-[#FF6B35]/90 h-10 w-10 p-0"
             >
-              <ScanLine className="w-5 h-5" />
+              <Search className="w-5 h-5" />
             </Button>
           </div>
 
           <Button
             type="button"
             variant="outline"
+            onClick={handleScanVIN}
             className="w-full bg-transparent border-[#FF6B35] text-white hover:bg-[#FF6B35]/10 h-12 rounded-xl"
           >
             <ScanLine className="w-5 h-5 mr-2" />
