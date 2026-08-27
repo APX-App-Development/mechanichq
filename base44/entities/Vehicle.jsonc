@@ -1,0 +1,45 @@
+{
+  "name": "Vehicle",
+  "type": "object",
+  "properties": {
+    "year": {
+      "type": "number",
+      "description": "Vehicle year (2010+)"
+    },
+    "make": {
+      "type": "string",
+      "description": "Vehicle manufacturer"
+    },
+    "model": {
+      "type": "string",
+      "description": "Vehicle model"
+    },
+    "engine": {
+      "type": "string",
+      "description": "Engine size/type"
+    },
+    "nickname": {
+      "type": "string",
+      "description": "User's nickname for this vehicle"
+    }
+  },
+  "required": [
+    "year",
+    "make",
+    "model"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

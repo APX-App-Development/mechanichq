@@ -1,0 +1,63 @@
+{
+  "name": "SavedPart",
+  "type": "object",
+  "properties": {
+    "part_name": {
+      "type": "string"
+    },
+    "oem_part_number": {
+      "type": "string"
+    },
+    "msrp_price": {
+      "type": "number"
+    },
+    "vehicle_info": {
+      "type": "string",
+      "description": "Year Make Model Engine"
+    },
+    "manufacturer": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "purchase_links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "store": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "part_name",
+    "oem_part_number"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

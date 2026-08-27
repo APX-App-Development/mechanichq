@@ -1,0 +1,58 @@
+{
+  "name": "PriceAlert",
+  "type": "object",
+  "properties": {
+    "part_name": {
+      "type": "string",
+      "description": "Name of the part"
+    },
+    "part_number": {
+      "type": "string",
+      "description": "Part number"
+    },
+    "target_price": {
+      "type": "number",
+      "description": "Desired price threshold"
+    },
+    "current_price": {
+      "type": "number",
+      "description": "Current lowest price"
+    },
+    "retailers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of retailers to monitor"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether alert is active"
+    },
+    "last_checked": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last price check timestamp"
+    }
+  },
+  "required": [
+    "part_name",
+    "part_number",
+    "target_price"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}
